@@ -1,0 +1,29 @@
+html, body {
+	max-width: 960px;
+	overflow: hidden;
+}
+/* Background animation */
+.background {
+	display: flex;
+	justify-content: center;
+}
+.skyBackground {
+	height: 768px;
+	width: 960px;
+	position: relative;
+}
+.skyBackground:first-child {
+	left : 960px;
+}
+.skyBackground:nth-child(2) {
+	position: absolute;
+}
+/* Monk animation */
+.monkContainer {
+	width: 63.25px;
+	height: 100%;
+	display: block;
+	overflow: hidden;
+	position: absolute;
+	top: 300px;
+}
