@@ -1,4 +1,6 @@
 $(function() {
+	/* Let's store some data */
+	$('body').after('<p class="lastPositionPillar" hidden></p>');
 	/* Music loop */
 	var music = document.createElement('audio');
 	music.setAttribute('src', 'sound/music/music.mp3');
@@ -35,8 +37,28 @@ $(function() {
 	/* Pillars are coming */
 	function setNewPillar() {
 		var speed = pillarsAreQuicker(timeStart);
-		var pillarY = Math.floor(Math.random() * 2) * 370;
 		var pillar = $('.pillars:first').clone().appendTo('.pillarsContainer');
+		/* Where does it comes ? 
+		2 chances on 3 that it will be 
+		different from the previous*/
+		console.log($('.lastPositionPillar').html());
+		if (parseInt($('.lastPositionPillar').html()) === 0) {
+			var pillarY = Math.ceil(Math.random() * 3);
+			if (pillarY == 2 || pillarY == 3) {
+				pillarY = 1;
+			} else 
+				pillarY = 0;
+			console.log(pillarY);
+		} else {
+			var pillarY = Math.ceil(Math.random() * 3);
+			if (pillarY == 2 || pillarY == 3) {
+				pillarY = 0;
+			} else 
+				pillarY = 1;
+			console.log(pillarY);
+		}
+		pillarY *= 370;
+		$('.lastPositionPillar').html(pillarY);
 		pillar.css('left', 870);
 		pillar.css('top', pillarY);
 		pillarIsComing(pillar, pillarY, speed);
@@ -58,7 +80,10 @@ $(function() {
 	function pillarsAreQuicker(timeStart) {
 		var timeNow = $.now();
 		var timeSinceTheBeggining = timeNow - timeStart;
-		var pillarsSpeed = 6000 - (timeSinceTheBeggining / 25);
+		var pillarsSpeed = 4500 - (timeSinceTheBeggining / 20);
+		if (pillarsSpeed < 1500) {
+			pillarsSpeed = 1500;
+		}
 		return parseInt(pillarsSpeed);
 	}
 	function pillarsAreNumerous(timeStart) {
@@ -66,10 +91,9 @@ $(function() {
 		var timeNow = $.now();
 		var timeSinceTheBeggining = timeNow - timeStart;
 		var pillarsPace = parseInt(3000 - (timeSinceTheBeggining / 25));
-		if (pillarsPace < 750) {
-			pillarsPace = 750;
+		if (pillarsPace < 450) {
+			pillarsPace = 450;
 		}
-		console.log("pillarsPace=" + pillarsPace);
 		setNewPillar();
 		setTimeout(function() {pillarsAreNumerous(timeStart);}, pillarsPace);
 	}
