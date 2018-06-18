@@ -34,27 +34,51 @@ $(function() {
 
 	/* Pillars are coming */
 	function setNewPillar() {
-		var pillar = $('.pillars').clone().appendTo('.pillarsContainer');
-		pillar.css('left', 870);
+		var speed = pillarsAreQuicker(timeStart);
 		var pillarY = Math.floor(Math.random() * 2) * 370;
-		console.log(pillarY);
+		var pillar = $('.pillars:first').clone().appendTo('.pillarsContainer');
+		pillar.css('left', 870);
 		pillar.css('top', pillarY);
-		pillarIsComing(pillar, pillarY);
+		pillarIsComing(pillar, pillarY, speed);
 	}
-	function pillarIsComing(pillar, pillarY) {
-		pillar.animate({left : 0}, 9000, 'linear', function() {
+	function pillarIsComing(pillar, pillarY, speed) {
+		pillar.animate({left : 0}, speed, 'linear', function() {
 			pillarX = parseInt($(this).css('left'));
 			while (pillarX < 0) {
 				$(this).css('left', pillarX);
 				pillarX = parseInt($(this).css('left'));
 			}
+			pillar.empty
 			pillar.remove();
 		});
 	}
+
+	/* More you survive... more god is angry */
+	var timeStart = $.now();
+	function pillarsAreQuicker(timeStart) {
+		var timeNow = $.now();
+		var timeSinceTheBeggining = timeNow - timeStart;
+		var pillarsSpeed = 6000 - (timeSinceTheBeggining / 25);
+		return parseInt(pillarsSpeed);
+	}
+	function pillarsAreNumerous(timeStart) {
+		var pillarsPlace = 3000; // FIX THIS
+		var timeNow = $.now();
+		var timeSinceTheBeggining = timeNow - timeStart;
+		var pillarsPace = parseInt(3000 - (timeSinceTheBeggining / 25));
+		if (pillarsPace < 750) {
+			pillarsPace = 750;
+		}
+		console.log("pillarsPace=" + pillarsPace);
+		setNewPillar();
+		setTimeout(function() {pillarsAreNumerous(timeStart);}, pillarsPace);
+	}
+
+
 	/* Fonctions calling */
-	var animation = setInterval(function() {monkIsAnimating(4);} , 200);
+	setInterval(function() {monkIsAnimating(4);} , 200);
 	skyIsMoving();
-	setInterval(setNewPillar, 5000);
+	pillarsAreNumerous(timeStart);
 
 	/* Moving the little guy */
 	$(document).on('keydown', function(e) {
