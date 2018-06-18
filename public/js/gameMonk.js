@@ -1,4 +1,13 @@
 $(function() {
+	/* Music loop */
+	var music = document.createElement('audio');
+	music.setAttribute('src', 'sound/music/music.mp3');
+	music.addEventListener('ended', function() {
+		this.currentTime = 0;
+		this.play();
+	}, false);
+	music.play();
+
 	/* background animation */
 	function skyIsMoving () {
 		$('.skyBackground').animate({left : '-=960'}, 4000, 'linear', function() {
@@ -7,6 +16,7 @@ $(function() {
 			skyIsMoving();
 		});
 	}
+
 	/* Monk animation */
 	function monkIsAnimating(numImgs) {
 		monk.css('margin-left', -1 * (count * monkHeight));
@@ -16,6 +26,7 @@ $(function() {
 			count = 0;
 		}
 	}
+
 	/* Monk variables */
 	var 	monkHeight = 63.25;
 	var 	count = 0;
@@ -25,6 +36,7 @@ $(function() {
 	var animation = setInterval(function() {monkIsAnimating(4);} , 200);
 	skyIsMoving();
 
+	/* Moving the little guy */
 	$(document).on('keydown', function(e) {
 		var monkY = parseInt($('.monkContainer').css('top'));
 		var monkX = parseInt($('.monkContainer').css('left'));
