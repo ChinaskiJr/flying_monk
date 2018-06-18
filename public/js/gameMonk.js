@@ -32,9 +32,29 @@ $(function() {
 	var 	count = 0;
 	var 	monk = $('.monkContainer').find('img');
 
+	/* Pillars are coming */
+	function setNewPillar() {
+		var pillar = $('.pillars').clone().appendTo('.pillarsContainer');
+		pillar.css('left', 870);
+		var pillarY = Math.floor(Math.random() * 2) * 370;
+		console.log(pillarY);
+		pillar.css('top', pillarY);
+		pillarIsComing(pillar, pillarY);
+	}
+	function pillarIsComing(pillar, pillarY) {
+		pillar.animate({left : 0}, 9000, 'linear', function() {
+			pillarX = parseInt($(this).css('left'));
+			while (pillarX < 0) {
+				$(this).css('left', pillarX);
+				pillarX = parseInt($(this).css('left'));
+			}
+			pillar.remove();
+		});
+	}
 	/* Fonctions calling */
 	var animation = setInterval(function() {monkIsAnimating(4);} , 200);
 	skyIsMoving();
+	setInterval(setNewPillar, 5000);
 
 	/* Moving the little guy */
 	$(document).on('keydown', function(e) {

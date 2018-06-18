@@ -1,6 +1,7 @@
 html, body {
 	max-width: 960px;
 	overflow: hidden;
+	margin: 0;
 }
 /* Background animation */
 .background {
@@ -11,6 +12,7 @@ html, body {
 	height: 768px;
 	width: 960px;
 	position: relative;
+	z-index: 10;
 }
 .skyBackground:first-child {
 	left : 960px;
@@ -26,4 +28,12 @@ html, body {
 	overflow: hidden;
 	position: absolute;
 	top: 300px;
+	z-index: 100;
+}
+/* Pillars */
+.pillars {
+	position: absolute;
+	top: 0px;
+	left: -100px;
+	z-index: 80;
 }
