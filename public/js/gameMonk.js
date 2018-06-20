@@ -135,33 +135,6 @@ $(function() {
 				monkX = pillarX - 210;
 			
 			$('.monkContainer').animate({left: monkX},{ 
-				duration: 20, 
-				easing: 'linear',
-				queue: false,
-				complete: function() {
-					monkFalling();
-				}
-			});
-			$('.monkContainer').animate({top: monkY + 80},{ 
-				duration: 100, 
-				easing: 'linear',
-				queue: false,
-				complete: function() {
-					monkFalling();
-				}
-			});
-			$('.areYouBlocked').html(1);
-		} else 
-			$('.areYouBlocked').html(0);
-		// Meet a pillar from behind (you fool...)
-		if (
-		monkY < (pillarY + 400)
-		&& monkY > (pillarY - 64)
-		&& monkX < pillarX + 60
-		&& monkX > pillarX) {
-			monkX = pillarX + 80;
-			$('.monkContainer').stop();
-			$('.monkContainer').animate({left: monkX},{ 
 				duration: speedGame, 
 				easing: 'linear',
 				queue: false,
@@ -169,10 +142,17 @@ $(function() {
 					monkFalling();
 				}
 			});
+			$('.monkContainer').animate({top: monkY + 30},{ 
+				duration: (speedGame / 3),
+				easing: 'linear',
+				queue: false,
+				complete: function() {
+					monkFalling();
+				}
+			});
 			$('.areYouBlocked').html(1);
 		} else 
 			$('.areYouBlocked').html(0);
-
 		// Meet a pillard from the bottom
 		if (
 		monkY >= (pillarY + 400)
@@ -213,6 +193,37 @@ $(function() {
 			$('.areYouBlocked').html(0);
 	}
 
+	
+
+	/* MONK'S MOVEMENTS */
+	/* Monk is always falling... */
+	function monkFalling() {
+		var monkY = parseInt($('.monkContainer').css('top'));
+		var monkX = parseInt($('.monkContainer').css('left'));
+		$('.monkContainer').animate({left: 0}, {
+			duration: 4000,
+			easing: 'linear',
+			queue: false
+		});
+		$('.monkContainer').animate({top: 760}, {
+			duration: 3000,
+			easing: 'linear',
+			queue: false
+		});
+	}
+	/* Monk has gone too far */
+	function monkSpatialLimits() {
+		var monkY = parseInt($('.monkContainer').css('top'));
+		var monkX = parseInt($('.monkContainer').css('left'));
+		if (monkX > 800) {
+			$('.monkContainer').stop();
+			monkFalling();
+		}
+		if (monkY < 60) {
+			$('.monkContainer').stop();
+			monkFalling();
+		}
+	}
 	/* DEFEAT */
 	function monkDead() {
 		var monkX = parseInt($('.monkContainer').css('left'));
@@ -233,24 +244,7 @@ $(function() {
 		}
 	}
 
-
 	/* EVENT GESTION */
-	/* Monk is always falling... */
-	function monkFalling() {
-		var monkY = parseInt($('.monkContainer').css('top'));
-		var monkX = parseInt($('.monkContainer').css('left'));
-		$('.monkContainer').animate({left: 0}, {
-			duration: 4000,
-			easing: 'linear',
-			queue: false
-		});
-		$('.monkContainer').animate({top: 760}, {
-			duration: 3000,
-			easing: 'linear',
-			queue: false
-		});
-	}
-
 	/* Moving the little guy */
 	$(document).on('keydown', moveTheMonk);
 	$(document).on('click', moveTheMonk);
@@ -264,7 +258,8 @@ $(function() {
 			start: {
 				x: monkX,
 				y: monkY,
-				angle: -45,
+				angle: -65,
+				lenght: 8,
 			},
 			end: {
 				x: monkX + 400,
@@ -300,6 +295,7 @@ $(function() {
 			break;
 			// Mouseclick 
 			case 1:
+				e.preventDefault();
 				$('.monkContainer').stop(true, false);
 				$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
 					duration: 1500,
@@ -318,4 +314,5 @@ $(function() {
 	pillarsAreNumerous(timeStart);
 	monkFalling();
 	setInterval(monkDead, 200);
+	setInterval(monkSpatialLimits, 200);
 });
