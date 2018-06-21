@@ -119,7 +119,7 @@ $(function() {
 		var speedGame = parseFloat($('.speedGame').html());
 		// Meet a pillar from the face
 		if (
-		monkY < (pillarY + 400)
+		monkY < (pillarY + 370)
 		&& monkY > (pillarY - 20)
 		&& monkX < pillarX
 		&& (monkX + 60) > pillarX) {
@@ -147,21 +147,13 @@ $(function() {
 			$('.areYouBlocked').html(0);
 		// Meet a pillard from the bottom
 		if (
-		monkY >= (pillarY + 400)
-		&& monkY < (pillarY + 450)
+		monkY >= (pillarY + 370)
+		&& monkY < (pillarY + 420)
 		&& monkX > pillarX - 40
 		&& monkX < (pillarX + 40)
 		&& pillarX > 0) {
-			monkY = 400;
 			$('.monkContainer').stop();
-			$('.monkContainer').animate({top: monkY},{ 
-				duration: 100 - speedGame * 65, 
-				easing: 'linear',
-				queue: false,
-				complete: function() {
-					monkFalling();
-				}
-			});
+			monkFalling();
 			$('.areYouBlocked').html(1);
 		} else 
 			$('.areYouBlocked').html(0);
@@ -280,7 +272,7 @@ $(function() {
 			break;
 			// Mouseclick 
 			case 1:
-				$('.monkContainer').stop(true, false);
+				$('.monkContainer').stop();
 				$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
 					duration: 1000,
 					queue: false,
