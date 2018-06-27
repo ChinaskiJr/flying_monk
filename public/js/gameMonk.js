@@ -79,6 +79,9 @@ $(function() {
 				pillarX = parseInt($(this).css('left'));
 			}
 			pillar.remove();
+			var score = parseInt($('.score').html());
+			score+=5;
+			$('.score').html(score)
 			pillar.clearQueue();
 		});
 	}
@@ -118,12 +121,12 @@ $(function() {
 		var pillarX = parseInt(pillar.css('left'));
 		var speedGame = parseFloat($('.speedGame').html());
 		// Meet a pillar from the face
+
 		if (
-		monkY < (pillarY + 370)
+		monkY < (pillarY + 400)
 		&& monkY > (pillarY - 20)
 		&& monkX < pillarX
 		&& (monkX + 60) > pillarX) {
-
 			$('.monkContainer').stop();
 			monkX = monkX - (speedGame * (speedGame * 65)) - 20 * (1 + speedGame);
 			$('.monkContainer').animate({left: monkX},{ 
@@ -145,6 +148,21 @@ $(function() {
 			$('.areYouBlocked').html(1);
 		} else 
 			$('.areYouBlocked').html(0);
+
+		// Meet a pillar from behind (you fool...)
+		if (
+		monkY < (pillarY + 400)
+		&& monkY > (pillarY - 64)
+		&& monkX < pillarX + 80
+		&& monkX > pillarX) {
+			monkX = pillarX + 90;
+			$('.monkContainer').stop();
+			$('.monkContainer').animate({left: monkX}, 200, 'linear');
+			monkFalling();
+			$('.areYouBlocked').html(1);
+		} else 
+			$('.areYouBlocked').html(0);
+		
 		// Meet a pillard from the bottom
 		if (
 		monkY >= (pillarY + 370)
@@ -160,10 +178,9 @@ $(function() {
 		// Meet a pillard from the top
 		if (
 		monkY <= pillarY
-		&& monkY + 50 >= pillarY
-		&& monkX > pillarX - 20
-		&& monkX < (pillarX + 40)) {
-			monkY = 300;
+		&& monkY + 65 >= pillarY
+		&& monkX > pillarX
+		&& monkX < (pillarX + 80)) {
 			$('.monkContainer').stop();
 			monkFalling();
 			$('.areYouBlocked').html(1);
@@ -270,9 +287,20 @@ $(function() {
 					$('.monkContainer').css('left', monkX += 50);
 				monkFalling();
 			break;
+			case 32:
+				e.preventdefault();
+				$('.monkContainer').stop(true, false);
+				$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
+					duration: 1000,
+					queue: false,
+					complete: function() {
+						monkFalling();
+					}
+				});
+			break;
 			// Mouseclick 
 			case 1:
-				$('.monkContainer').stop();
+				$('.monkContainer').stop(true, false);
 				$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
 					duration: 1000,
 					queue: false,
