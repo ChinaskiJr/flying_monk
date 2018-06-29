@@ -16,6 +16,23 @@ html, body {
 	left: 350px;
 	position: inherit;
 }
+.looser {
+	display: none;
+	z-index: 225;
+	position: absolute;
+	left : 325px;
+	top : 700px;
+}
+.oneMore {
+	display: none;
+	z-index: 225;
+	position: absolute;
+	left : 285px;
+	top : 700px;
+}
+.oneMore {
+	border-radius: 25px;
+}
 /* Background animation */
 .background {
 	display: flex;
