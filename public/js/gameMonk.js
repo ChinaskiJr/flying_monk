@@ -1,6 +1,8 @@
 $(function() {
 
 	$('.startButton').on('click', gameMonk);
+	$('.oneMore').on('click', gameMonk);
+
 
 function gameMonk() {
 	$('.welcome').css('display', 'none');
@@ -13,6 +15,9 @@ function gameMonk() {
 	$('body').after('<p class="areYouDead" hidden>0</p>');
 	$('body').after('<p class="speedGame" hidden>100</p>');
 	$('body').after('<p class="isFalling" hidden>0</p>');
+	if (parseInt($('.score').html()) > 0) {
+		$('.score').html(0);
+	}
 	/* Music loop */
 	var music = document.createElement('audio');
 	music.setAttribute('src', 'sound/music/music.mp3');
@@ -263,7 +268,6 @@ function gameMonk() {
 						}, function() {
 							$(this).css("border", "none");
 						})
-						$('.oneMore').on('click', gameMonk);
 					}
 				});
 			}, 2000);
