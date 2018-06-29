@@ -3,6 +3,19 @@ html, body {
 	overflow: hidden;
 	margin: 0;
 }
+.welcome {
+	z-index: 200;
+	position: absolute;
+}
+.startButton:hover {
+	border: 4px #FFB765 solid;
+	border-radius: 25px;
+}
+.startButton {
+	top: 500px;
+	left: 350px;
+	position: inherit;
+}
 /* Background animation */
 .background {
 	display: flex;
@@ -28,6 +41,7 @@ html, body {
 	overflow: hidden;
 	position: absolute;
 	top: 300px;
+	left: 400px;
 	z-index: 100;
 }
 /* Pillars */
