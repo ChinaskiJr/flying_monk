@@ -1,14 +1,8 @@
 $(function() {
 
-	$('.startButton').on('click', gameMonk);
-	$('.oneMore').on('click', gameMonk);
-
-
-function gameMonk() {
+	$('.startButton').on('click', function() {
 	$('.welcome').css('display', 'none');
-	$('.monkContainer').css('display', 'initial').css('top', 300).css('left', 400);
-	$('.looser').css('display', 'none').css('top', 700);
-	$('.oneMore').css('display', 'none').css('top', 700);
+
 	/* Let's store some data */
 	$('body').after('<p class="lastPositionPillar" hidden></p>');
 	$('body').after('<p class="areYouBlocked" hidden></p>');
@@ -38,12 +32,24 @@ function gameMonk() {
 		});
 	}
 	/* Monk animation */
-	function monkIsAnimating(numImgs) {
-		monk.css('margin-left', -1 * (count * monkHeight));
-		count++;
-		if (count === numImgs) {
-			count = 0;
+	function monkIsHurting() {
+		for (var i = 0 ; i < interval5.length ; i++) {
+			clearTimeout(interval5[i]);
 		}
+		$('.monkSprite').attr('src', 'pictures/hurtingMonk.png');
+		interval5[interval5.length] = setTimeout(function() {
+			$('.monkSprite').attr('src', 'pictures/flyingMonk.png');
+		}, 250);
+	}
+	function monkIsAnimating(numImgs) {
+		if ($('.monkSprite').attr('src') == 'pictures/flyingMonk.png') {
+			monk.css('margin-left', -1 * (count * monkHeight));
+			count++;
+			if (count === numImgs) {
+				count = 0;
+			}
+		} else
+			monk.css('margin-left', 'initial');
 	}
 	/* Monk variables */
 	var 	monkHeight = 63.25;
@@ -134,13 +140,13 @@ function gameMonk() {
 		var pillarX = parseInt(pillar.css('left'));
 		var speedGame = parseFloat($('.speedGame').html());
 		var speedMonk = speedPillar * ((pillarX - 60) / 960);
-		console.log(speedMonk);
 		// Meet a pillar from the face
 		if (
 		monkY < (pillarY + 400)
 		&& monkY > (pillarY - 20)
 		&& monkX < pillarX
 		&& (monkX + 60) > pillarX) {
+			monkIsHurting();
 			$('.monkContainer').stop();
 			monkX -= 20;
 			$('.monkContainer').animate({left: 0},{
@@ -173,7 +179,8 @@ function gameMonk() {
 		&& monkY > (pillarY - 64)
 		&& monkX < pillarX + 60
 		&& monkX > pillarX) {
-			$('.monkContainer').stop();
+		monkIsHurting();
+		$('.monkContainer').stop();
 			monkX += 80;
 			$('.monkContainer').animate({left: monkX},{ 
 				duration: 500, 
@@ -192,7 +199,8 @@ function gameMonk() {
 		&& monkX > pillarX
 		&& monkX < (pillarX + 85)
 		&& pillarX > 0) {
-			$('.monkContainer').stop();
+		monkIsHurting();
+		$('.monkContainer').stop();
 			monkFalling();
 		}
 		// Meet a pillard from the top
@@ -201,7 +209,8 @@ function gameMonk() {
 		&& monkY + 65 >= pillarY
 		&& monkX > pillarX
 		&& monkX < (pillarX + 80)) {
-			$('.monkContainer').stop();
+		monkIsHurting();
+		$('.monkContainer').stop();
 			monkFalling();
 		} 
 	}
@@ -252,6 +261,7 @@ function gameMonk() {
 			for (var i = 0 ; i < interval4.length ; i++) {
 				clearInterval(interval4[i]);
 			}
+			// Display the GameOver Screen
 			$('.looser').fadeIn(600);
 			$('.looser').animate({top: 200}, {
 				duration: 1000,
@@ -264,9 +274,9 @@ function gameMonk() {
 					queue: false,
 					complete: function() {
 						$('.oneMore').hover(function() {
-							$(this).css("border", "4px #FFB765 solid");
+							$(this).css('left', 280).css('top', 695);
 						}, function() {
-							$(this).css("border", "none");
+							$(this).css('left', 285).css('top', 700);
 						})
 					}
 				});
@@ -286,19 +296,21 @@ function gameMonk() {
 		var bezierPath_params = {
 			start: {
 				x: monkX,
+					x: monkX,
 				y: monkY,
-				angle: -25,
+				angle: -75,
 				lenght: 1,
 			},
 			end: {
-				x: monkX + 150,
-				y: monkY - 200,
-				angle: 65,
-				lenght: 1,
+				x: monkX + 100,
+				y: monkY - 100,
+				angle: 75,
+				lenght: 0.75,
 			}
 		}
 		switch (e.which) {
-			// Top
+			
+			/*// Top
 			case 38:
 				if (monkY > 10 && $('.areYouBlocked').html() != 1)
 					$('.monkContainer').css('top', monkY -= 50);
@@ -321,12 +333,12 @@ function gameMonk() {
 				if (monkX < 800 && $('.areYouBlocked').html() != 1)
 					$('.monkContainer').css('left', monkX += 50);
 				monkFalling();
-			break;
+			break;*/
 			case 32:
 				if ($('.areYouBlocked').html() != 1) {
 					$('.monkContainer').stop(true, false);
 					$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
-						duration: 1000,
+						duration: 400,
 						queue: false,
 						complete: function() {
 							monkFalling();
@@ -339,7 +351,7 @@ function gameMonk() {
 			case 1:
 				$('.monkContainer').stop(true, false);
 				$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
-					duration: 1000,
+					duration: 400,
 					queue: false,
 					complete: function() {
 						monkFalling();
@@ -349,14 +361,34 @@ function gameMonk() {
 		}
 	}
 
-	/* FUNCTIONS CALLING */
-	var interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
+	/* FUNCTIONS CALLING */ 
+	var interval1 = setInterval(function() {monkIsAnimating(4);} , 100);
 	var interval2 = setInterval(monkDead, 20);
 	var interval3 = setInterval(monkSpatialLimits, 20);
 	// global array for the ID of HelloPillar()'s' setInterval
 	var interval4 = [];
+	var interval5 = [];
 	skyIsMoving();
 	pillarsAreNumerous(timeStart);
 	monkFalling();
-}
+
+	//Play Again
+	$('.oneMore').on('click', function() {
+		$('.areYouDead').html(0);
+		$('.speedGame').html(100);
+		$('.monkContainer').css('display', 'initial').css('top', 300).css('left', 400);
+		$('.looser').css('display', 'none').css('top', 700);
+		$('.oneMore').css('display', 'none').css('top', 700);
+		timeStart = $.now();
+		interval1 = setInterval(function() {monkIsAnimating(4);} , 100);
+		interval2 = setInterval(monkDead, 20);
+		interval3 = setInterval(monkSpatialLimits, 20);
+		// global array for the ID of HelloPillar()'s' setInterval
+		interval4 = [];
+		interval5 = [];
+		skyIsMoving();
+		pillarsAreNumerous(timeStart);
+		monkFalling();
+	});
+});
 });

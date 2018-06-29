@@ -8,8 +8,8 @@ html, body {
 	position: absolute;
 }
 .startButton:hover {
-	border: 4px #FFB765 solid;
-	border-radius: 25px;
+	top : 495px;
+	left: 345px;
 }
 .startButton {
 	top: 500px;
@@ -29,9 +29,6 @@ html, body {
 	position: absolute;
 	left : 285px;
 	top : 700px;
-}
-.oneMore {
-	border-radius: 25px;
 }
 /* Background animation */
 .background {
