@@ -31,30 +31,23 @@ $(function() {
 				skyIsMoving();
 		});
 	}
-	/* Monk animation */
-	function monkIsHurting() {
-		for (var i = 0 ; i < interval5.length ; i++) {
-			clearTimeout(interval5[i]);
-		}
-		$('.monkSprite').attr('src', 'pictures/hurtingMonk.png');
-		interval5[interval5.length] = setTimeout(function() {
-			$('.monkSprite').attr('src', 'pictures/flyingMonk.png');
-		}, 250);
-	}
-	function monkIsAnimating(numImgs) {
-		if ($('.monkSprite').attr('src') == 'pictures/flyingMonk.png') {
-			monk.css('margin-left', -1 * (count * monkHeight));
-			count++;
-			if (count === numImgs) {
-				count = 0;
-			}
-		} else
-			monk.css('margin-left', 'initial');
-	}
 	/* Monk variables */
 	var 	monkHeight = 63.25;
 	var 	count = 0;
-	var 	monk = $('.monkContainer').find('img');
+	var 	monk = $('.monkSprite');
+	/* Monk animation */
+	function monkIsHurting() {
+		clearInterval(interval1);
+		monk.css('margin-left', -1 * (4 * monkHeight));
+		interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
+	}
+	function monkIsAnimating(numImgs) {
+		monk.css('margin-left', -1 * (count * monkHeight));
+		count++;
+		if (count === numImgs) {
+			count = 0;
+		}
+	}
 
 	/* PILLARS STUFF */
 	/* Pillars are coming : general function*/
@@ -87,7 +80,7 @@ $(function() {
 		pillar.css('top', pillarY);
 		pillarIsComing(pillar, pillarY, speedPillar);
 		// Stock the ID in array interval4 for clear it when game will be over
-		interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 60 - speedGame * speedGame));
+		interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 60 - speedGame * 3));
 	}		
 	/* Display a pillar and destroy it when 'top' comes to 0*/
 	function pillarIsComing(pillar, pillarY, speed) {
@@ -101,7 +94,6 @@ $(function() {
 			var score = parseInt($('.score').html());
 			score+=5;
 			$('.score').html(score)
-			pillar.clearQueue();
 		});
 	}
 
@@ -142,25 +134,20 @@ $(function() {
 		var speedMonk = speedPillar * ((pillarX - 60) / 960);
 		// Meet a pillar from the face
 		if (
-		monkY < (pillarY + 400)
-		&& monkY > (pillarY - 20)
+		monkY < (pillarY + pillar.height() + 20)
+		&& monkY > pillarY
 		&& monkX < pillarX
-		&& (monkX + 60) > pillarX) {
+		&& monkX + monkHeight > pillarX) {
 			monkIsHurting();
 			$('.monkContainer').stop();
-			monkX -= 20;
+			$('.monkContainer').animate({left: pillarX - 80}, {
+				duration: 10,
+				queue:false});
 			$('.monkContainer').animate({left: 0},{
-				duration: speedMonk - 200,
+				duration: speedMonk,
 				easing: 'linear',
 				queue: false,
-				start: function() {
-					$('.monkContainer').css('left', pillarX - 60);
-				},
-				complete: function() {
-					$('.areYouBlocked').html(0);
-					monkFalling();
-				}
-			});
+			});	
 			$('.monkContainer').animate({top: monkY + 20},{ 
 				duration: 50,
 				easing: 'linear',
@@ -175,15 +162,15 @@ $(function() {
 
 		// Meet a pillar from behind
 		if (
-		monkY < (pillarY + 370)
-		&& monkY > (pillarY - 64)
-		&& monkX < pillarX + 60
+		monkY < pillarY + pillar.height()
+		&& monkY + 20 > pillarY - monkHeight
+		&& monkX < pillarX + pillar.width()
 		&& monkX > pillarX) {
 		monkIsHurting();
 		$('.monkContainer').stop();
-			monkX += 80;
-			$('.monkContainer').animate({left: monkX},{ 
-				duration: 500, 
+			// 80 for pillar width
+			$('.monkContainer').animate({left: pillarX + 80},{ 
+				duration: 50, 
 				easing: 'linear',
 				queue: false,
 				complete: function() {
@@ -192,23 +179,23 @@ $(function() {
 			});
 		}
 		
-		// Meet a pillard from the bottom
+		// Meet a pillard from monk's top
 		if (
-		monkY >= pillarY
-		&& monkY < (pillarY + 440)
+		monkY >= pillarY + pillar.height() - 20
+		&& monkY < pillarY + pillar.height() + 20
 		&& monkX > pillarX
-		&& monkX < (pillarX + 85)
+		&& monkX < pillarX + pillar.width()
 		&& pillarX > 0) {
 		monkIsHurting();
 		$('.monkContainer').stop();
 			monkFalling();
 		}
-		// Meet a pillard from the top
+		// Meet a pillard from monk's bottom
 		if (
-		monkY <= pillarY
-		&& monkY + 65 >= pillarY
-		&& monkX > pillarX
-		&& monkX < (pillarX + 80)) {
+		monkY + monkHeight >= pillarY - 20
+		&& monkY + monkHeight <= pillarY + 20
+		&& monkX > pillarX - 20
+		&& monkX < pillarX + pillar.width()) {
 		monkIsHurting();
 		$('.monkContainer').stop();
 			monkFalling();
@@ -274,9 +261,9 @@ $(function() {
 					queue: false,
 					complete: function() {
 						$('.oneMore').hover(function() {
-							$(this).css('left', 280).css('top', 695);
+							$(this).css('left', 280).css('top', 495);
 						}, function() {
-							$(this).css('left', 285).css('top', 700);
+							$(this).css('left', 285).css('top', 500);
 						})
 					}
 				});
@@ -302,43 +289,18 @@ $(function() {
 				lenght: 1,
 			},
 			end: {
-				x: monkX + 100,
-				y: monkY - 100,
+				x: monkX + 150,
+				y: monkY - 150,
 				angle: 75,
-				lenght: 0.75,
+				lenght: 1,
 			}
 		}
 		switch (e.which) {
-			
-			/*// Top
-			case 38:
-				if (monkY > 10 && $('.areYouBlocked').html() != 1)
-					$('.monkContainer').css('top', monkY -= 50);
-				monkFalling();
-			break;
-			// Bottom
-			case 40:
-				if (monkY < 700 && $('.areYouBlocked').html() != 1)
-					$('.monkContainer').css('top', monkY += 50);
-				monkFalling();
-			break;
-			// Left
-			case 37:
-				if (monkX > 8 && $('.areYouBlocked').html() != 1)
-					$('.monkContainer').css('left', monkX -= 50);
-				monkFalling();
-			break;
-			// Right
-			case 39:
-				if (monkX < 800 && $('.areYouBlocked').html() != 1)
-					$('.monkContainer').css('left', monkX += 50);
-				monkFalling();
-			break;*/
 			case 32:
 				if ($('.areYouBlocked').html() != 1) {
 					$('.monkContainer').stop(true, false);
 					$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
-						duration: 400,
+						duration: 700,
 						queue: false,
 						complete: function() {
 							monkFalling();
@@ -351,7 +313,7 @@ $(function() {
 			case 1:
 				$('.monkContainer').stop(true, false);
 				$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
-					duration: 400,
+					duration: 700,
 					queue: false,
 					complete: function() {
 						monkFalling();
@@ -362,7 +324,7 @@ $(function() {
 	}
 
 	/* FUNCTIONS CALLING */ 
-	var interval1 = setInterval(function() {monkIsAnimating(4);} , 100);
+	var interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
 	var interval2 = setInterval(monkDead, 20);
 	var interval3 = setInterval(monkSpatialLimits, 20);
 	// global array for the ID of HelloPillar()'s' setInterval
@@ -380,12 +342,11 @@ $(function() {
 		$('.looser').css('display', 'none').css('top', 700);
 		$('.oneMore').css('display', 'none').css('top', 700);
 		timeStart = $.now();
-		interval1 = setInterval(function() {monkIsAnimating(4);} , 100);
+		interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
 		interval2 = setInterval(monkDead, 20);
 		interval3 = setInterval(monkSpatialLimits, 20);
 		// global array for the ID of HelloPillar()'s' setInterval
 		interval4 = [];
-		interval5 = [];
 		skyIsMoving();
 		pillarsAreNumerous(timeStart);
 		monkFalling();
