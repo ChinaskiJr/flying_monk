@@ -164,7 +164,6 @@ $(function() {
 			});
 			$('.areYouBlocked').html(1);
 		}
-
 		// Meet a pillar from behind
 		if (
 		monkY < pillarY + pillar.height()
@@ -182,7 +181,6 @@ $(function() {
 				}
 			});
 		}
-		
 		// Meet a pillard from monk's top
 		if (
 		monkY >= pillarY + pillar.height() - 20
@@ -353,6 +351,7 @@ $(function() {
 	$('.oneMore').on('click', function() {
 		$('.areYouDead').html(0);
 		$('.speedGame').html(100);
+		$('.score').html(0);
 		$('.monkContainer').css('display', 'initial').css('top', 300).css('left', 400);
 		$('.looser').css('display', 'none').css('top', 700);
 		$('.oneMore').css('display', 'none').css('top', 700);
