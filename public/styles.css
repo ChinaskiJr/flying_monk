@@ -24,6 +24,7 @@ html, body {
 .startButton:hover {
 	top : 495px;
 	left: 345px;
+	cursor: pointer;
 }
 .startButton {
 	top: 500px;

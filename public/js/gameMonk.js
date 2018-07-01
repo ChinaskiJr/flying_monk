@@ -278,9 +278,10 @@ $(function() {
 					queue: false,
 					complete: function() {
 						$('.oneMore').hover(function() {
-							$(this).css('left', 280).css('top', 495);
+							$(this).css('left', 280).css('top', 495).css('cursor', 'pointer');
 						}, function() {
-							$(this).css('left', 285).css('top', 500);
+							if ($('.areYouDead').html() == 1)
+								$(this).css('left', 285).css('top', 500);
 						})
 						// Using the one method to prevent the user from run the function several times with several clicks
 						$('.oneMore').one('click', tryAgain);
