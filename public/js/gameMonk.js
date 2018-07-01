@@ -1,6 +1,6 @@
 $(function() {
 
-	$('.startButton').on('click', function() {
+	$('.startButton').one('click', function() {
 	$('.welcome').css('display', 'none');
 
 	/* Let's store some data */
@@ -106,7 +106,7 @@ $(function() {
 	/* More you survive... more god is angry
 	Deal with speed of pillars */
 	var timeStart = $.now();
-	function pillarsAreQuicker(timeStart) {
+	function pillarsAreQuicker() {
 		var timeNow = $.now();
 		var timeSinceTheBeggining = timeNow - timeStart;
 		// pillarsSpeed is the duration (ms) for a pillar to go through the screen
@@ -117,7 +117,7 @@ $(function() {
 		return parseInt(pillarsSpeed);
 	}
 	/* Deal with pace of pillars */
-	function pillarsAreNumerous(timeStart) {
+	function pillarsAreNumerous() {
 		var timeNow = $.now();
 		var timeSinceTheBeggining = timeNow - timeStart;
 		var pillarsPace = parseInt(2000 - (timeSinceTheBeggining / 20));
@@ -126,7 +126,7 @@ $(function() {
 		}
 		if (parseInt($('.areYouDead').html()) != 1) {
 			setNewPillar();
-			setTimeout(function() {pillarsAreNumerous(timeStart);}, pillarsPace);
+			setTimeout(function() {pillarsAreNumerous();}, pillarsPace);
 		}
 	}
 	
@@ -282,9 +282,11 @@ $(function() {
 						}, function() {
 							$(this).css('left', 285).css('top', 500);
 						})
+						// Using the one method to prevent the user from run the function several times with several clicks
+						$('.oneMore').one('click', tryAgain);
 					}
 				});
-			}, 2000);
+			}, 3000);
 		}
 	}
 
@@ -350,19 +352,18 @@ $(function() {
 	var interval3 = setInterval(monkSpatialLimits, 20);
 	// global array for the ID of HelloPillar()'s' setInterval
 	var interval4 = [];
-	var interval5 = [];
 	skyIsMoving();
 	pillarsAreNumerous(timeStart);
 	monkFalling();
 
 	//Play Again
-	$('.oneMore').on('click', function() {
+	function tryAgain () {
 		$('.areYouDead').html(0);
 		$('.speedGame').html(100);
 		$('.score').html(0);
 		$('.monkContainer').css('display', 'block').css('top', 300).css('left', 400);
-		$('.looser').css('display', 'none').css('top', 700);
-		$('.oneMore').css('display', 'none').css('top', 700);
+		$('.looser').css('opacity', '0').css('top', 700);
+		$('.oneMore').css('opacity', '0').css('top', 700);
 		timeStart = $.now();
 		interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
 		interval2 = setInterval(monkDead, 20);
@@ -372,6 +373,6 @@ $(function() {
 		skyIsMoving();
 		pillarsAreNumerous(timeStart);
 		monkFalling();
-	});
+	}
 });
 });
