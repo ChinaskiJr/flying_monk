@@ -263,25 +263,35 @@ $(function() {
 				duration: 1000,
 				queue: false,
 			});
-			$('.looser').animate({top: 200}, {
+			$('.looser').animate({top: 150}, {
 				duration: 1000,
 				queue: false
 			});
+			setTimeout(function() {
+				$('.credits').animate({opacity: 1}, {
+					duration: 1000,
+					queue: false,
+				});
+				$('.credits').animate({top: 250}, {
+					duration: 1000,
+					queue: false
+				});
+			}, 1000);
 			setTimeout(function() {
 				// fadeIn() doesn't work well on Edge & IE
 				$('.oneMore').animate({opacity: 1}, {
 					duration: 1000,
 					queue: false,
 				});
-				$('.oneMore').animate({top: 500}, {
+				$('.oneMore').animate({top: 525}, {
 					duration: 1000,
 					queue: false,
 					complete: function() {
 						$('.oneMore').hover(function() {
-							$(this).css('left', 280).css('top', 495).css('cursor', 'pointer');
+							$(this).css('top', 520).css('cursor', 'pointer');
 						}, function() {
 							if ($('.areYouDead').html() == 1)
-								$(this).css('left', 285).css('top', 500);
+								$(this).css('top', 525);
 						})
 						// Using the one method to prevent the user from run the function several times with several clicks
 						$('.oneMore').one('click', tryAgain);
@@ -365,6 +375,7 @@ $(function() {
 		$('.monkContainer').css('display', 'block').css('top', 300).css('left', 400);
 		$('.looser').css('opacity', '0').css('top', 700);
 		$('.oneMore').css('opacity', '0').css('top', 700);
+		$('.credits').css('opacity', '0').css('top', 700);
 		timeStart = $.now();
 		interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
 		interval2 = setInterval(monkDead, 20);
