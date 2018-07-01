@@ -35,14 +35,14 @@ html, body {
 	z-index: 225;
 	position: absolute;
 	left : 325px;
-	top : 700px;
+	top : 800px;
 }
 .oneMore {
 	display: none;
 	z-index: 225;
 	position: absolute;
 	left : 285px;
-	top : 700px;
+	top : 800px;
 }
 /* Background animation */
 .background {

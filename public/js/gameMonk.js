@@ -258,13 +258,19 @@ $(function() {
 				clearInterval(interval4[i]);
 			}
 			// Display the GameOver Screen
-			$('.looser').fadeIn(600);
+			$('.looser').fadeIn({
+				duration: 600,
+				queue: false,
+			});
 			$('.looser').animate({top: 200}, {
 				duration: 1000,
 				queue: false
 			});
 			setTimeout(function() {
-				$('.oneMore').fadeIn(600);
+				$('.oneMore').fadeIn({
+					duration: 600,
+					queue: false,
+				});
 				$('.oneMore').animate({top: 500}, {
 					duration: 1000,
 					queue: false,
