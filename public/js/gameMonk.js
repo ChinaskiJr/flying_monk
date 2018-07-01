@@ -258,8 +258,9 @@ $(function() {
 				clearInterval(interval4[i]);
 			}
 			// Display the GameOver Screen
-			$('.looser').fadeIn({
-				duration: 600,
+			// fadeIn() doesn't work well on Edge & IE
+			$('.looser').animate({opacity: 1}, {
+				duration: 1000,
 				queue: false,
 			});
 			$('.looser').animate({top: 200}, {
@@ -267,8 +268,9 @@ $(function() {
 				queue: false
 			});
 			setTimeout(function() {
-				$('.oneMore').fadeIn({
-					duration: 600,
+				// fadeIn() doesn't work well on Edge & IE
+				$('.oneMore').animate({opacity: 1}, {
+					duration: 1000,
 					queue: false,
 				});
 				$('.oneMore').animate({top: 500}, {
@@ -358,7 +360,7 @@ $(function() {
 		$('.areYouDead').html(0);
 		$('.speedGame').html(100);
 		$('.score').html(0);
-		$('.monkContainer').css('display', 'initial').css('top', 300).css('left', 400);
+		$('.monkContainer').css('display', 'block').css('top', 300).css('left', 400);
 		$('.looser').css('display', 'none').css('top', 700);
 		$('.oneMore').css('display', 'none').css('top', 700);
 		timeStart = $.now();

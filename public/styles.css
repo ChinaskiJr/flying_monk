@@ -31,23 +31,24 @@ html, body {
 	position: inherit;
 }
 .looser {
-	display: none;
+	opacity: 0;
 	z-index: 225;
 	position: absolute;
 	left : 325px;
-	top : 800px;
+	top : 700px;
 }
 .oneMore {
-	display: none;
+	opacity: 0;
 	z-index: 225;
 	position: absolute;
 	left : 285px;
-	top : 800px;
+	top : 700px;
 }
 /* Background animation */
 .background {
 	display: flex;
 	justify-content: center;
+	position: relative;
 }
 .skyBackground {
 	height: 768px;
