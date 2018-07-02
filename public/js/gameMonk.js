@@ -12,6 +12,7 @@ $(function() {
 	if (parseInt($('.score').html()) > 0) {
 		$('.score').html(0);
 	}
+	/* SOUNDS */
 	/* Music loop */
 	var music = document.createElement('audio');
 	music.setAttribute('src', 'sound/music/music.mp3');
@@ -20,7 +21,11 @@ $(function() {
 		this.play();
 	}, false);
 	music.play();
-
+	/* Hit sound */
+	var hit = document.createElement('audio');
+	var hitLong = document.createElement('audio');
+	hit.setAttribute('src', 'sound/sounds/hit.mp3');
+	hitLong.setAttribute('src', 'sound/sounds/hitLong.mp3');
 	/* LOOP ANIMATION */
 	/* background animation */
 	function skyIsMoving () {
@@ -144,6 +149,9 @@ $(function() {
 		&& monkY + monkHeight > pillarY
 		&& monkX < pillarX
 		&& monkX + monkHeight > pillarX) {
+			
+			hitLong.play();
+
 			monkIsHurting();
 			$('.monkContainer').stop();
 			$('.monkContainer').animate({left: pillarX - 80}, {
@@ -171,6 +179,7 @@ $(function() {
 		&& monkX < pillarX + pillar.width()
 		&& monkX > pillarX) {
 		monkIsHurting();
+		hit.play();
 		$('.monkContainer').stop();
 			$('.monkContainer').animate({left: monkX + 40},{ 
 				duration: 50,
@@ -189,6 +198,7 @@ $(function() {
 		&& monkX < pillarX + pillar.width()
 		&& pillarX > 0) {
 		monkIsHurting();
+		hit.play();
 		$('.monkContainer').stop();
 			monkFalling();
 		}
@@ -199,6 +209,7 @@ $(function() {
 		&& monkX + monkHeight > pillarX - 20
 		&& monkX < pillarX + pillar.width()) {
 		monkIsHurting();
+		hit.play();
 		$('.monkContainer').stop();
 		$('.monkContainer').animate({top: monkY - 50},{ 
 			duration: 200,
