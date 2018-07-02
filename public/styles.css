@@ -88,6 +88,7 @@ html, body {
 /* Credits */
 .credits {
 	z-index: 225;
+	top: 800px;
 	opacity: 0;
 	font-family: Aileron-semi-Bold;
 	position: absolute;
