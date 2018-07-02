@@ -54,6 +54,7 @@ html, body {
 	display: flex;
 	justify-content: center;
 	position: relative;
+	overflow: hidden;
 }
 .skyBackground {
 	height: 768px;

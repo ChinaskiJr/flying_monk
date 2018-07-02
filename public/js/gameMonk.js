@@ -71,17 +71,26 @@ $(function() {
 			var pillarY = Math.ceil(Math.random() * 3);
 			if (pillarY == 2 || pillarY == 3) {
 				pillarY = 1;
-			} else 
+			} else {
 				pillarY = 0;
+			}
 		} else {
 			var pillarY = Math.ceil(Math.random() * 3);
 			if (pillarY == 2 || pillarY == 3) {
 				pillarY = 0;
-			} else 
+			} else {
 				pillarY = 1;
+			}
 		}
 		pillarY *= 370;
+		// lastPositionPillar should be 0 or 370
 		lastPositionPillar = pillarY;
+		// Random height
+		if (pillarY === 0) {
+			pillarY -= Math.random() * 185;
+		} else {
+			pillarY += Math.random() * 185;
+		}
 		pillar.css('left', 870);
 		pillar.css('top', pillarY);
 		pillarIsComing(pillar, pillarY, speedPillar);
@@ -102,7 +111,6 @@ $(function() {
 			$('.score').html(score)
 		});
 	}
-
 	/* More you survive... more god is angry
 	Deal with speed of pillars */
 	var timeStart = $.now();
@@ -143,9 +151,7 @@ $(function() {
 		&& monkY + monkHeight > pillarY
 		&& monkX < pillarX
 		&& monkX + monkHeight > pillarX) {
-			
 			hitLong.play();
-
 			monkIsHurting();
 			$('.monkContainer').stop();
 			$('.monkContainer').animate({left: pillarX - 80}, {
@@ -319,13 +325,13 @@ $(function() {
 			start: {
 				x: monkX,
 				y: monkY,
-				angle: -75,
+				angle: -60,
 				lenght: 1,
 			},
 			end: {
-				x: monkX + 150,
-				y: monkY - 150,
-				angle: 75,
+				x: monkX + 200,
+				y: monkY - 175,
+				angle: 60,
 				lenght: 1,
 			}
 		}
