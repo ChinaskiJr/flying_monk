@@ -106,3 +106,20 @@ html, body {
 	font-size: 1.1em;
 	justify-content: center;
 }
+/* IE 10 & 11 FIX */
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
+	.looser {
+		/* 960/2 - 291/2 */
+		left: 334px; 
+	}
+	.credits {
+		/* 960/2 - 377/2 */
+		left: 291.5px;
+		margin: auto;
+	}
+	.oneMore {
+		/* 960/2 - 364/2 */
+		left: 298px;
+		margin: auto;
+	}
+}
