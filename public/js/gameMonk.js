@@ -4,14 +4,10 @@ $(function() {
 	$('.welcome').css('display', 'none');
 
 	/* Let's store some data */
-	$('body').after('<p class="lastPositionPillar" hidden></p>');
-	$('body').after('<p class="areYouBlocked" hidden>0</p>');
-	$('body').after('<p class="areYouDead" hidden>0</p>');
-	$('body').after('<p class="speedGame" hidden>100</p>');
-	$('body').after('<p class="isFalling" hidden>0</p>');
-	if (parseInt($('.score').html()) > 0) {
-		$('.score').html(0);
-	}
+	var lastPositionPillar;
+	var areYouBlocked = 0;
+	var areYouDead = 0;
+	var speedGame = 100;
 	/* SOUNDS */
 	/* Music loop */
 	var music = document.createElement('audio');
@@ -32,11 +28,11 @@ $(function() {
 		$('.skyBackground').animate({left : '-=960'}, 4000, 'linear', function() {
 			$('.skyBackground:first').css('left', 960);
 			$('.skyBackground:nth-child(2)').css('left', 0);
-			if ($('.areYouDead').html() !=1)
+			if (areYouDead !=1)
 				skyIsMoving();
 		});
 	}
-	/* Monk variables */
+	/* Monk animation variables */
 	var 	monkHeight = 63.25;
 	var 	count = 0;
 	var 	monk = $('.monkSprite');
@@ -52,7 +48,7 @@ $(function() {
 		interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
 	}
 	function monkIsAnimating(numImgs) {
-		$('.areYouBlocked').html(0);
+		areYouBlocked = 0;
 		monk.css('margin-left', -1 * (count * monkHeight));
 		count++;
 		if (count === numImgs) {
@@ -65,14 +61,13 @@ $(function() {
 	function setNewPillar() {
 		var speedPillar = pillarsAreQuicker(timeStart);
 		// speed = distance / time
-		var speedGame = 960 / speedPillar;		
-		$('.speedGame').html(speedGame);
+		speedGame = 960 / speedPillar;		
 		var pillar = $('.pillars:first').clone().appendTo('.pillarsContainer');
 		/* Where does it comes ? 
 		 * 2 chances on 3 that it will be 
 		 * different from the previous
 		 */
-		if (parseInt($('.lastPositionPillar').html()) === 0) {
+		if (lastPositionPillar === 0) {
 			var pillarY = Math.ceil(Math.random() * 3);
 			if (pillarY == 2 || pillarY == 3) {
 				pillarY = 1;
@@ -86,7 +81,7 @@ $(function() {
 				pillarY = 1;
 		}
 		pillarY *= 370;
-		$('.lastPositionPillar').html(pillarY);
+		lastPositionPillar = pillarY;
 		pillar.css('left', 870);
 		pillar.css('top', pillarY);
 		pillarIsComing(pillar, pillarY, speedPillar);
@@ -129,7 +124,7 @@ $(function() {
 		if (pillarsPace < 200) {
 			pillarsPace = 200;
 		}
-		if (parseInt($('.areYouDead').html()) != 1) {
+		if (areYouDead != 1) {
 			setNewPillar();
 			setTimeout(function() {pillarsAreNumerous();}, pillarsPace);
 		}
@@ -141,7 +136,6 @@ $(function() {
 		var monkX = parseInt($('.monkContainer').css('left'));
 		var pillarY = parseInt(pillar.css('top'));
 		var pillarX = parseInt(pillar.css('left'));
-		var speedGame = parseFloat($('.speedGame').html());
 		var speedMonk = speedPillar * ((pillarX - 60) / 960);
 		// Meet a pillar from the face
 		if (
@@ -170,7 +164,7 @@ $(function() {
 					monkFalling();
 				}
 			});
-			$('.areYouBlocked').html(1);
+			areYouBlocked = 1;
 		}
 		// Meet a pillar from behind
 		if (
@@ -254,8 +248,8 @@ $(function() {
 	function monkDead() {
 		var monkX = parseInt($('.monkContainer').css('left'));
 		var monkY = parseInt($('.monkContainer').css('top'));
-		if (monkX < 0 || (monkY > 700 && parseInt($('.areYouDead').html()) != 1)) {
-			$('.areYouDead').html(1);
+		if (monkX < 0 || (monkY > 700 && areYouDead != 1)) {
+			areYouDead = 1;
 			$('.monkContainer').css('display', 'none');
 			var gameOverSound = document.createElement('audio');
 			gameOverSound.setAttribute('src', 'sound/sounds/gameOver.mp3');
@@ -301,7 +295,7 @@ $(function() {
 						$('.oneMore').hover(function() {
 							$(this).css('top', 555).css('cursor', 'pointer');
 						}, function() {
-							if ($('.areYouDead').html() == 1)
+							if (areYouDead === 1)
 								$(this).css('top', 560);
 						})
 						// Using the one method to prevent the user from run the function several times with several clicks
@@ -337,7 +331,7 @@ $(function() {
 		}
 		switch (e.which) {
 			case 32:
-				if ($('.areYouBlocked').html() != 1) {
+				if (areYouBlocked != 1) {
 					monkIsJumping();
 					$('.monkContainer').stop(true, false);
 					$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
@@ -380,8 +374,8 @@ $(function() {
 
 	//Play Again
 	function tryAgain () {
-		$('.areYouDead').html(0);
-		$('.speedGame').html(100);
+		areYouDead = 0;
+		speedGame = 100;
 		$('.score').html(0);
 		$('.monkContainer').css('display', 'block').css('top', 300).css('left', 400);
 		$('.looser').css('opacity', '0').css('top', 700);
