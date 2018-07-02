@@ -294,15 +294,15 @@ $(function() {
 					duration: 1000,
 					queue: false,
 				});
-				$('.oneMore').animate({top: 525}, {
+				$('.oneMore').animate({top: 560}, {
 					duration: 1000,
 					queue: false,
 					complete: function() {
 						$('.oneMore').hover(function() {
-							$(this).css('top', 520).css('cursor', 'pointer');
+							$(this).css('top', 555).css('cursor', 'pointer');
 						}, function() {
 							if ($('.areYouDead').html() == 1)
-								$(this).css('top', 525);
+								$(this).css('top', 560);
 						})
 						// Using the one method to prevent the user from run the function several times with several clicks
 						$('.oneMore').one('click', tryAgain);
