@@ -63,7 +63,7 @@ $(function() {
 		$('.pressSpace').animate({opacity: 0}, {
 			duration: 300,
 			complete: function() {
-				if (spacePressed === 0) {
+				if (spacePressed === 0 && areYouDead === 0) {
 					$('.pressSpace').animate({opacity: 1}, {
 						duration: 300,
 						complete: flash,
@@ -155,7 +155,6 @@ $(function() {
 			setTimeout(function() {pillarsAreNumerous();}, pillarsPace);
 		}
 	}
-	
 	/* COLLISION */ 
 	function helloPillar (pillar, speedPillar) {
 		var monkY = parseInt($('.monkContainer').css('top'));
@@ -306,7 +305,7 @@ $(function() {
 					duration: 1000,
 					queue: false,
 				});
-				$('.credits').animate({top: 250}, {
+				$('.credits').animate({top: 225}, {
 					duration: 1000,
 					queue: false
 				});
