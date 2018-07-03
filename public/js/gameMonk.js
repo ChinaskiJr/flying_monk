@@ -8,6 +8,7 @@ $(function() {
 	var areYouBlocked = 0;
 	var areYouDead = 0;
 	var speedGame = 100;
+	var spacePressed = 0;
 	/* SOUNDS */
 	/* Music loop */
 	var music = document.createElement('audio');
@@ -57,7 +58,22 @@ $(function() {
 			count = 0;
 		}
 	}
-
+	/* PressSpace flash */
+	function flash () {
+		$('.pressSpace').animate({opacity: 0}, {
+			duration: 300,
+			complete: function() {
+				if (spacePressed === 0) {
+					$('.pressSpace').animate({opacity: 1}, {
+						duration: 300,
+						complete: flash,
+					});
+				} else {
+					$('.pressSpace').css('opacity', 0);
+				}
+			}
+		});
+	}
 	/* PILLARS STUFF */
 	/* Pillars are coming : general function*/
 	function setNewPillar() {
@@ -342,6 +358,7 @@ $(function() {
 			}
 		};
 		if (e.which === 32) {
+			spacePressed = 1;
 			if (areYouBlocked != 1) {
 				monkIsJumping();
 				$('.monkContainer').stop(true, false);
@@ -367,6 +384,7 @@ $(function() {
 	skyIsMoving();
 	pillarsAreNumerous(timeStart);
 	monkFalling();
+	flash();
 
 	//Play Again
 	function tryAgain () {

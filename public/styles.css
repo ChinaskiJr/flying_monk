@@ -21,6 +21,7 @@ html, body {
 	left: 20px;
 	font-size: 1.5em;
 }
+/* Welcome Screen */
 .welcome {
 	z-index: 200;
 	position: absolute;
@@ -35,6 +36,15 @@ html, body {
 	left: 350px;
 	position: inherit;
 }
+/* PressSpace bar */
+.pressSpace {
+	z-index: 175;
+	position: absolute;
+	top: 550px;
+	text-align: center;
+	opacity : 1;
+}
+/* Gameover Screen */
 .looser {
 	opacity: 0;
 	z-index: 225;
