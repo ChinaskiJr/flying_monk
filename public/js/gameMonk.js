@@ -23,6 +23,14 @@ $(function() {
 	var hitLong = document.createElement('audio');
 	hit.setAttribute('src', 'sound/sounds/hit.mp3');
 	hitLong.setAttribute('src', 'sound/sounds/hitLong.mp3');
+	/* Sound on/off button */
+	$('.soundButton').on('click', function() {
+		if (music.volume != 0) {
+			music.volume = 0;
+		} else {
+			music.volume = 1;
+		}
+	})
 	/* LOOP ANIMATION */
 	/* background animation */
 	function skyIsMoving () {
