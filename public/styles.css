@@ -126,11 +126,13 @@ html, body {
 	.credits {
 		/* 960/2 - 377/2 */
 		left: 291.5px;
-		margin: auto;
 	}
 	.oneMore {
 		/* 960/2 - 364/2 */
 		left: 298px;
-		margin: auto;
+	}
+	.pressSpace {
+		/* 960/2 - 466/2 */
+		left: 247px;
 	}
 }
