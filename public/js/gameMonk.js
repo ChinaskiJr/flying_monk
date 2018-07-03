@@ -51,7 +51,7 @@ $(function() {
 		interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
 	}
 	function monkIsAnimating(numImgs) {
-		areYouBlocked = 0;
+		
 		monk.css('margin-left', -1 * (count * monkHeight));
 		count++;
 		if (count === numImgs) {
@@ -147,8 +147,8 @@ $(function() {
 		var timeNow = $.now();
 		var timeSinceTheBeggining = timeNow - timeStart;
 		var pillarsPace = parseInt(2000 - (timeSinceTheBeggining / 35));
-		if (pillarsPace < 200) {
-			pillarsPace = 200;
+		if (pillarsPace < 400) {
+			pillarsPace = 400;
 		}
 		if (areYouDead != 1) {
 			setNewPillar();
@@ -164,7 +164,7 @@ $(function() {
 		var speedMonk = speedPillar * ((pillarX - 60) / 960);
 		// Meet a pillar from the face
 		if (
-		monkY < (pillarY + pillar.height() + 20)
+		monkY < (pillarY + pillar.height())
 		&& monkY + monkHeight > pillarY
 		&& monkX < pillarX
 		&& monkX + monkHeight > pillarX) {
@@ -188,11 +188,12 @@ $(function() {
 				}
 			});
 			areYouBlocked = 1;
-		}
+		} else 
+			areYouBlocked = 0;
 		// Meet a pillar from behind
 		if (
-		monkY < pillarY + pillar.height()
-		&& monkY > pillarY - monkHeight + 20
+		monkY < pillarY + pillar.height() - 10
+		&& monkY > pillarY - monkHeight
 		&& monkX < pillarX + pillar.width()
 		&& monkX > pillarX) {
 		monkIsHurting();
@@ -209,7 +210,7 @@ $(function() {
 		}
 		// Meet a pillard from monk's top
 		if (
-		monkY >= pillarY + pillar.height() - 20
+		monkY >= pillarY + pillar.height() - 10
 		&& monkY < pillarY + pillar.height()
 		&& monkX > pillarX
 		&& monkX < pillarX + pillar.width()
