@@ -40,10 +40,12 @@ $(function() {
 	// Reset interval1 at the end of the animation
 	function monkIsJumping() {
 		clearInterval(interval1);
-		monk.css('margin-left', -1 * (5 * monkHeight));		
+		interval1 = null;
+		monk.css('margin-left', -1 * (5 * monkHeight));	
 	}
 	function monkIsHurting() {
 		clearInterval(interval1);
+		interval1 = null;
 		monk.css('margin-left', -1 * (4 * monkHeight));
 		interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
 	}
@@ -244,10 +246,14 @@ $(function() {
 		if (monkX > 800) {
 			$('.monkContainer').stop();
 			monkFalling();
+			if (!interval1)
+				interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
 		}
 		if (monkY < 60) {
 			$('.monkContainer').stop();
 			monkFalling();
+			if (!interval1)
+				interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
 		}
 	}
 	/* DEFEAT */
@@ -262,6 +268,7 @@ $(function() {
 			gameOverSound.play();
 			// clear initial functionCalling (end of file)
 			clearInterval(interval1);
+			interval1 = null;
 			clearInterval(interval2);
 			clearInterval(interval3);
 			// clear all the helloPillar() setInterval
@@ -314,8 +321,7 @@ $(function() {
 
 	/* EVENT GESTION */
 	/* Moving the little guy */
-	$(document).on('keydown', moveTheMonk);
-	$(document).on('click', moveTheMonk);
+	$(document).on('keyup', moveTheMonk);
 	function moveTheMonk(e) {
 		var monkY = parseInt($('.monkContainer').css('top'));
 		var monkX = parseInt($('.monkContainer').css('left'));
@@ -334,27 +340,11 @@ $(function() {
 				angle: 60,
 				lenght: 1,
 			}
-		}
-		switch (e.which) {
-			case 32:
-				if (areYouBlocked != 1) {
-					monkIsJumping();
-					$('.monkContainer').stop(true, false);
-					$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
-						duration: 700,
-						queue: false,
-						complete: function() {
-							monkFalling();
-							interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
-						}
-					});
-				} else
-					monkFalling();
-				break;
-			// Mouseclick 	
-			case 1:
-				$('.monkContainer').stop(true, false);
+		};
+		if (e.which === 32) {
+			if (areYouBlocked != 1) {
 				monkIsJumping();
+				$('.monkContainer').stop(true, false);
 				$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
 					duration: 700,
 					queue: false,
@@ -363,8 +353,8 @@ $(function() {
 						interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
 					}
 				});
-
-			break;
+			} else
+				monkFalling();
 		}
 	}
 
