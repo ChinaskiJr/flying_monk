@@ -105,9 +105,9 @@ $(function() {
 		lastPositionPillar = pillarY;
 		// Random height
 		if (pillarY === 0) {
-			pillarY -= Math.random() * 185;
+			pillarY -= Math.random() * 250;
 		} else {
-			pillarY += Math.random() * 185;
+			pillarY += Math.random() * 250;
 		}
 		pillar.css('left', 870);
 		pillar.css('top', pillarY);
@@ -136,7 +136,7 @@ $(function() {
 		var timeNow = $.now();
 		var timeSinceTheBeggining = timeNow - timeStart;
 		// pillarsSpeed is the duration (ms) for a pillar to go through the screen
-		var pillarsSpeed = 4500 - (timeSinceTheBeggining / 10);
+		var pillarsSpeed = 4500 - (timeSinceTheBeggining / 20);
 		if (pillarsSpeed < 1000) {
 			pillarsSpeed = 1000;
 		}
@@ -146,7 +146,7 @@ $(function() {
 	function pillarsAreNumerous() {
 		var timeNow = $.now();
 		var timeSinceTheBeggining = timeNow - timeStart;
-		var pillarsPace = parseInt(2000 - (timeSinceTheBeggining / 20));
+		var pillarsPace = parseInt(2000 - (timeSinceTheBeggining / 35));
 		if (pillarsPace < 200) {
 			pillarsPace = 200;
 		}
@@ -334,7 +334,6 @@ $(function() {
 			}, 3000);
 		}
 	}
-
 	/* EVENT GESTION */
 	/* Moving the little guy */
 	$(document).on('keyup', moveTheMonk);
@@ -347,14 +346,14 @@ $(function() {
 			start: {
 				x: monkX,
 				y: monkY,
-				angle: -60,
-				lenght: 1,
+				angle: -45,
+				lenght: 0.5,
 			},
 			end: {
-				x: monkX + 200,
-				y: monkY - 175,
-				angle: 60,
-				lenght: 1,
+				x: monkX + 100,
+				y: monkY - 200,
+				angle: 45,
+				lenght: 0.25,
 			}
 		};
 		if (e.which === 32) {
@@ -374,7 +373,6 @@ $(function() {
 				monkFalling();
 		}
 	}
-
 	/* FUNCTIONS CALLING */ 
 	var interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
 	var interval2 = setInterval(monkDead, 20);
@@ -385,7 +383,6 @@ $(function() {
 	pillarsAreNumerous(timeStart);
 	monkFalling();
 	flash();
-
 	//Play Again
 	function tryAgain () {
 		areYouDead = 0;
