@@ -22,14 +22,32 @@ html, body {
 	left: 20px;
 	font-size: 1.5em;
 }
-.soundButton {
+.soundButtonContainer {
+	z-index: 150;
+	position: absolute;
+	margin: 0;
+	top: 20px;
+	left: 950px;
+	overflow: hidden;
+	margin-left: -32px;
+	height: 100%;
+	width: 32px;
+}
+.soundButtonContainer:hover {
+	cursor: pointer;
+}
+.musicButtonContainer {
 	z-index: 150;
 	position: absolute;
 	margin: 0;
 	top: 20px;
 	left: 900px;
+	overflow: hidden;
+	margin-left: -32px;
+	height: 100%;
+	width: 32px;
 }
-.soundButton:hover {
+.musicButtonContainer:hover {
 	cursor: pointer;
 }
 /* Welcome Screen */

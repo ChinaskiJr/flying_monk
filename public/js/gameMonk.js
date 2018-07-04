@@ -9,6 +9,7 @@ $(function() {
 	var areYouDead = 0;
 	var speedGame = 100;
 	var spacePressed = 0;
+	var musicMute = 0;
 	/* SOUNDS */
 	/* Music loop */
 	var music = document.createElement('audio');
@@ -23,14 +24,46 @@ $(function() {
 	var hitLong = document.createElement('audio');
 	hit.setAttribute('src', 'sound/sounds/hit.mp3');
 	hitLong.setAttribute('src', 'sound/sounds/hitLong.mp3');
+	/* Game over sream */
+	var gameOverSound = document.createElement('audio');
+	gameOverSound.setAttribute('src', 'sound/sounds/gameOver.mp3');
 	/* Sound on/off button */
-	$('.soundButton').on('click', function() {
+	$('.soundButtonContainer').on('click', function() {
+		if (parseInt($('.soundButton').css('margin-left')) != 0) {
+			$('.soundButton').css('margin-left', 0);
+		} else {
+			$('.soundButton').css('margin-left', -32);
+		}
+		if (hit.volume != 0) {
+			hit.volume = 0;
+		} else {
+			hit.volume = 1;
+		}
+		if (hitLong.volume != 0) {
+			hitLong.volume = 0;
+		} else {
+			hitLong.volume = 1;
+		} 
+		if (gameOverSound.volume != 0) {
+			gameOverSound.volume = 0;
+		} else {
+			gameOverSound.volume = 1;
+		}
+	});
+	$('.musicButton').on('click', function() {
+		if (parseInt($('.musicButton').css('margin-left')) != 0) {
+			$('.musicButton').css('margin-left', 0);
+		} else {
+			$('.musicButton').css('margin-left', -32);
+		}
 		if (music.volume != 0) {
 			music.volume = 0;
+			musicMute = 1;
 		} else {
 			music.volume = 1;
+			musicMute = 0;
 		}
-	})
+	});
 	/* LOOP ANIMATION */
 	/* background animation */
 	function skyIsMoving () {
@@ -288,8 +321,6 @@ $(function() {
 			areYouDead = 1;
 			$(document).off('keyup', moveTheMonk);
 			$('.monkContainer').css('display', 'none');
-			var gameOverSound = document.createElement('audio');
-			gameOverSound.setAttribute('src', 'sound/sounds/gameOver.mp3');
 			gameOverSound.play();
 			// clear initial functionCalling (end of file)
 			clearInterval(interval1);
