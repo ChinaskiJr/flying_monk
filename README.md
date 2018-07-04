@@ -1,4 +1,4 @@
-# monk_vs_the_pillars
+# Monk vs. the Pillars
 A floppy-bird like, made to practice with javascript and jQuery. Help Monk to survive against les pillars !
 
 ![monk2Illustr](/pictures/monk2.png)
