@@ -286,6 +286,7 @@ $(function() {
 		var monkY = parseInt($('.monkContainer').css('top'));
 		if (monkX < 0 || (monkY > 700 && areYouDead != 1)) {
 			areYouDead = 1;
+			$(document).off('keyup', moveTheMonk);
 			$('.monkContainer').css('display', 'none');
 			var gameOverSound = document.createElement('audio');
 			gameOverSound.setAttribute('src', 'sound/sounds/gameOver.mp3');
@@ -393,6 +394,7 @@ $(function() {
 	flash();
 	//Play Again
 	function tryAgain () {
+		$(document).on('keyup', moveTheMonk);
 		areYouDead = 0;
 		speedGame = 100;
 		$('.score').html(0);
@@ -409,6 +411,7 @@ $(function() {
 		skyIsMoving();
 		pillarsAreNumerous(timeStart);
 		monkFalling();
+
 	}
 });
 });
