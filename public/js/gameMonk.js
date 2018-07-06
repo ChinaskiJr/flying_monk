@@ -7,6 +7,7 @@ $(function() {
 	var lastPositionPillar;
 	var areYouBlocked = 0;
 	var areYouDead = 0;
+	var isSkyMoving = 0;
 	var speedGame = 100;
 	var spacePressed = 0;
 	var musicMute = 0;
@@ -67,11 +68,14 @@ $(function() {
 	/* LOOP ANIMATION */
 	/* background animation */
 	function skyIsMoving () {
+		isSkyMoving = 1;
 		$('.skyBackground').animate({left : '-=960'}, 4000, 'linear', function() {
 			$('.skyBackground:first').css('left', 960);
 			$('.skyBackground:nth-child(2)').css('left', 0);
-			if (areYouDead !=1)
+			if (areYouDead != 1)
 				skyIsMoving();
+			else 
+				isSkyMoving = 0;
 		});
 	}
 	/* Monk animation variables */
@@ -92,7 +96,6 @@ $(function() {
 		interval1 = setInterval(function() {monkIsAnimating(4);} , 200);
 	}
 	function monkIsAnimating(numImgs) {
-		
 		monk.css('margin-left', -1 * (count * monkHeight));
 		count++;
 		if (count === numImgs) {
@@ -439,10 +442,11 @@ $(function() {
 		interval3 = setInterval(monkSpatialLimits, 20);
 		// global array for the ID of HelloPillar()'s' setInterval
 		interval4 = [];
-		skyIsMoving();
+		if (isSkyMoving === 0) {
+			skyIsMoving();
+		}
 		pillarsAreNumerous(timeStart);
 		monkFalling();
-
 	}
 });
 });
