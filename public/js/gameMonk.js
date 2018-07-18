@@ -68,18 +68,41 @@ $(function() {
 	/* LOOP ANIMATION */
 	/* background animation */
 	function skyIsMoving () {
-		isSkyMoving = 1;
-		$('.skyBackground').animate({left : '-=960'}, 4000, 'linear', function() {
-			$('.skyBackground:first').css('left', 960);
-			$('.skyBackground:nth-child(2)').css('left', 0);
-			if (areYouDead != 1)
-				skyIsMoving();
-			else 
-				isSkyMoving = 0;
-		});
+		// Desktop
+		if (window.matchMedia("(min-width: 768px)").matches) {
+			isSkyMoving = 1;
+			$('.skyBackground').animate({left : '-=960'}, 4000, 'linear', function() {
+				$('.skyBackground:first').css('left', 960);
+				$('.skyBackground:nth-child(2)').css('left', 0);
+				if (areYouDead != 1)
+					skyIsMoving();
+				else 
+					isSkyMoving = 0;
+			});
+		// Mobile
+		} else {
+			$('.skyBackground').animate({left : '-=100%'}, 4000, 'linear', function() {
+				$('.skyBackground:first').css('left', '100%');
+				$('.skyBackground:nth-child(2)').css('left', 0);
+				if (areYouDead != 1)
+					skyIsMoving();
+				else 
+					isSkyMoving = 0;
+			});
+		}
+		
 	}
-	/* Monk animation variables */
-	var 	monkHeight = 63.25;
+	/* global variables */
+	// Desktop
+	if (window.matchMedia("(min-width: 768px)").matches) {
+		var 	monkHeight = 63.25;
+	// Mobile
+	} else {
+		var 	screenHeight = parseInt($('.background').css('height'));
+		var 	screenWidth = parseInt($('.background').css('width'));
+		var 	monkHeight = screenHeight * 0.1;
+		$('.monkContainer').css('width', monkHeight);
+	}
 	var 	count = 0;
 	var 	monk = $('.monkSprite');
 	/* Monk animation */
@@ -103,7 +126,8 @@ $(function() {
 		}
 	}
 	/* PressSpace flash */
-	function flash () {
+	function flash() {
+		if (window.matchMedia("(min-width: 768px)").matches) {
 		$('.pressSpace').animate({opacity: 0}, {
 			duration: 300,
 			complete: function() {
@@ -117,6 +141,7 @@ $(function() {
 				}
 			}
 		});
+	}
 	}
 	/* PILLARS STUFF */
 	/* Pillars are coming : general function*/
@@ -153,8 +178,19 @@ $(function() {
 		} else {
 			pillarY += Math.random() * 250;
 		}
-		pillar.css('left', 870);
-		pillar.css('top', pillarY);
+		if (window.matchMedia("(min-width: 768px)").matches) {
+			pillar.css('left', 870);
+			pillar.css('top', pillarY);
+		} else {
+			pillar.css('left', '100vw');
+			if (pillarY > 370) {
+				pillarY = 50 + (pillarY / 34);
+				pillarY = pillarY + "vh";
+				pillar.css('top', pillarY);
+			} else {
+				pillar.css('top', pillarY);
+			}
+		}
 		pillarIsComing(pillar, pillarY, speedPillar);
 		// Stock the ID in array interval4 for clear it when game will be over
 		interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 60 - speedGame * 3));
@@ -293,127 +329,251 @@ $(function() {
 			easing: 'linear',
 			queue: false
 		});
-		$('.monkContainer').animate({top: 760}, {
-			duration: 3000 * (1 - monkY / 760),
-			easing: 'linear',
-			queue: false
-		});
+		// Desktop
+		if (window.matchMedia("(min-width: 768px)").matches) {
+			$('.monkContainer').animate({top: 760}, {
+				duration: 3000 * (1 - monkY / 760),
+				easing: 'linear',
+				queue: false
+			});
+		// Mobile
+		} else {
+			$('.monkContainer').animate({top: "100vh"}, {
+				duration: 3000 * (1 - monkY / screenHeight),
+				easing: 'linear',
+				queue: false
+			});
+		}
 	}
 	/* Monk has gone too far */
 	function monkSpatialLimits() {
 		var monkY = parseInt($('.monkContainer').css('top'));
 		var monkX = parseInt($('.monkContainer').css('left'));
-		if (monkX > 800) {
-			$('.monkContainer').stop();
-			monkFalling();
-			if (!interval1)
-				interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
-		}
-		if (monkY < 60) {
-			$('.monkContainer').stop();
-			monkFalling();
-			if (!interval1)
-				interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
+		// Desktop
+		if (window.matchMedia("(min-width: 768px)").matches) {	
+			if (monkX > 800) {
+				$('.monkContainer').stop();
+				monkFalling();
+				if (!interval1)
+					interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
+			}
+			if (monkY < 60) {
+				$('.monkContainer').stop();
+				monkFalling();
+				if (!interval1)
+					interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
+			}
+		// Mobile
+		} else {
+			if (monkX > screenWidth * 0.95) {
+				$('.monkContainer').stop();
+				monkFalling();
+				if (!interval1)
+					interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
+			}
+			if (monkY < 10) {
+				$('.monkContainer').stop();
+				monkFalling();
+				if (!interval1)
+					interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
+			}
 		}
 	}
 	/* DEFEAT */
 	function monkDead() {
 		var monkX = parseInt($('.monkContainer').css('left'));
 		var monkY = parseInt($('.monkContainer').css('top'));
-		if (monkX < 0 || (monkY > 700 && areYouDead != 1)) {
-			areYouDead = 1;
-			$(document).off('keyup', moveTheMonk);
-			$('.monkContainer').css('display', 'none');
-			gameOverSound.play();
-			// clear initial functionCalling (end of file)
-			clearInterval(interval1);
-			interval1 = null;
-			clearInterval(interval2);
-			clearInterval(interval3);
-			// clear all the helloPillar() setInterval
-			for (var i = 0 ; i < interval4.length ; i++) {
-				clearInterval(interval4[i]);
-			}
-			// Display the GameOver Screen
-			// fadeIn() doesn't work well on Edge & IE
-			$('.looser').animate({opacity: 1}, {
-				duration: 1000,
-				queue: false,
-			});
-			$('.looser').animate({top: 150}, {
-				duration: 1000,
-				queue: false
-			});
-			setTimeout(function() {
-				$('.credits').animate({opacity: 1}, {
+		// Desktop
+		if (window.matchMedia("(min-width: 768px)").matches) {
+			if (monkX < 0 || (monkY > 700 && areYouDead != 1)) {
+				areYouDead = 1;
+				$(document).off('keyup', moveTheMonk);
+				$('.monkContainer').css('display', 'none');
+				gameOverSound.play();
+				// clear initial functionCalling (end of file)
+				clearInterval(interval1);
+				interval1 = null;
+				clearInterval(interval2);
+				clearInterval(interval3);
+				// clear all the helloPillar() setInterval
+				for (var i = 0 ; i < interval4.length ; i++) {
+					clearInterval(interval4[i]);
+				}
+				// Display the GameOver Screen
+				// fadeIn() doesn't work well on Edge & IE
+				$('.looser').animate({opacity: 1}, {
 					duration: 1000,
 					queue: false,
 				});
-				$('.credits').animate({top: 225}, {
+				$('.looser').animate({top: 150}, {
 					duration: 1000,
 					queue: false
 				});
-			}, 1000);
-			setTimeout(function() {
+				setTimeout(function() {
+					$('.credits').animate({opacity: 1}, {
+						duration: 1000,
+						queue: false,
+					});
+					$('.credits').animate({top: 225}, {
+						duration: 1000,
+						queue: false
+					});
+				}, 1000);
+				setTimeout(function() {
+					// fadeIn() doesn't work well on Edge & IE
+					$('.oneMore').animate({opacity: 1}, {
+						duration: 1000,
+						queue: false,
+					});
+					$('.oneMore').animate({top: 560}, {
+						duration: 1000,
+						queue: false,
+						complete: function() {
+							$('.oneMore').hover(function() {
+								$(this).css('top', 555).css('cursor', 'pointer');
+							}, function() {
+								if (areYouDead === 1)
+									$(this).css('top', 560);
+							})
+							// Using the one method to prevent the user from run the function several times with several clicks
+							$('.oneMore').one('click', tryAgain);
+						}
+					});
+				}, 3000);	
+			} 
+		// Mobile
+		} else {
+			if (monkX < 0 || (monkY > screenHeight * 0.9 && areYouDead != 1)) {
+				areYouDead = 1;
+				$(document).off('keyup', moveTheMonk);
+				$('.monkContainer').css('display', 'none');
+				gameOverSound.play();
+				// clear initial functionCalling (end of file)
+				clearInterval(interval1);
+				interval1 = null;
+				clearInterval(interval2);
+				clearInterval(interval3);
+				// clear all the helloPillar() setInterval
+				for (var i = 0 ; i < interval4.length ; i++) {
+					clearInterval(interval4[i]);
+				}
+				// Display the GameOver Screen
 				// fadeIn() doesn't work well on Edge & IE
-				$('.oneMore').animate({opacity: 1}, {
+				$('.looser').animate({opacity: 1}, {
 					duration: 1000,
 					queue: false,
 				});
-				$('.oneMore').animate({top: 560}, {
+				$('.looser').animate({top: "10%"}, {
 					duration: 1000,
-					queue: false,
-					complete: function() {
-						$('.oneMore').hover(function() {
-							$(this).css('top', 555).css('cursor', 'pointer');
-						}, function() {
-							if (areYouDead === 1)
-								$(this).css('top', 560);
-						})
-						// Using the one method to prevent the user from run the function several times with several clicks
-						$('.oneMore').one('click', tryAgain);
-					}
+					queue: false
 				});
-			}, 3000);
+				setTimeout(function() {
+					$('.credits').animate({opacity: 1}, {
+						duration: 1000,
+						queue: false,
+					});
+					$('.credits').animate({top: "25%"}, {
+						duration: 1000,
+						queue: false
+					});
+				}, 1000);
+				setTimeout(function() {
+					// fadeIn() doesn't work well on Edge & IE
+					$('.oneMore').animate({opacity: 1}, {
+						duration: 1000,
+						queue: false,
+					});
+					$('.oneMore').animate({top: "80%"}, {
+						duration: 1000,
+						queue: false,
+						complete: function() {
+							// Using the one method to prevent the user from run the function several times with several clicks
+							$('.oneMore').one('click', tryAgain);
+						}
+					});
+				}, 3000);
+			} 
 		}
 	}
 	/* EVENT GESTION */
 	/* Moving the little guy */
-	$(document).on('keyup', moveTheMonk);
-	function moveTheMonk(e) {
-		var monkY = parseInt($('.monkContainer').css('top'));
-		var monkX = parseInt($('.monkContainer').css('left'));
-		var bottomScreen = parseInt($('body').height());
-		var distanceMonkBottom = bottomScreen - monkY;
-		var bezierPath_params = {
-			start: {
-				x: monkX,
-				y: monkY,
-				angle: -45,
-				lenght: 0.5,
-			},
-			end: {
-				x: monkX + 100,
-				y: monkY - 200,
-				angle: 45,
-				lenght: 0.25,
+	// Desktop
+	if (window.matchMedia("(min-width: 768px)").matches) {
+		$(document).on('keyup', moveTheMonk);
+		function moveTheMonk(e) {
+			var monkY = parseInt($('.monkContainer').css('top'));
+			var monkX = parseInt($('.monkContainer').css('left'));
+			var bottomScreen = parseInt($('body').height());
+			var distanceMonkBottom = bottomScreen - monkY;
+			var bezierPath_params = {
+				start: {
+					x: monkX,
+					y: monkY,
+					angle: -45,
+					lenght: 0.5,
+				},
+				end: {
+					x: monkX + 100,
+					y: monkY - 200,
+					angle: 45,
+					lenght: 0.25,
+				}
+			};
+			if (e.which === 32) {
+				spacePressed = 1;
+				if (areYouBlocked != 1) {
+					monkIsJumping();
+					$('.monkContainer').stop(true, false);
+					$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
+						duration: 700,
+						queue: false,
+						complete: function() {
+							monkFalling();
+							interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
+						}
+					});
+				} else
+					monkFalling();
 			}
-		};
-		if (e.which === 32) {
-			spacePressed = 1;
-			if (areYouBlocked != 1) {
-				monkIsJumping();
-				$('.monkContainer').stop(true, false);
-				$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
-					duration: 700,
-					queue: false,
-					complete: function() {
-						monkFalling();
-						interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
-					}
-				});
-			} else
-				monkFalling();
+		}
+	// Mobile
+	} else {
+		$(document).on('mousedown', moveTheMonk);
+		function moveTheMonk(e) {
+			var monkY = parseInt($('.monkContainer').css('top'));
+			var monkX = parseInt($('.monkContainer').css('left'));
+			var bottomScreen = parseInt($('body').height());
+			var distanceMonkBottom = bottomScreen - monkY;
+			var bezierPath_params = {
+				start: {
+					x: monkX,
+					y: monkY,
+					angle: -45,
+					lenght: 0.5,
+				},
+				end: {
+					x: monkX + screenWidth * 0.10,
+					y: monkY - screenHeight * 0.26,
+					angle: 45,
+					lenght: 0.25,
+				}
+			};
+			if (e.which === 1) {
+				spacePressed = 1;
+				if (areYouBlocked != 1) {
+					monkIsJumping();
+					$('.monkContainer').stop(true, false);
+					$('.monkContainer').animate({path : new $.path.bezier(bezierPath_params)}, {
+						duration: 700,
+						queue: false,
+						complete: function() {
+							monkFalling();
+							interval1 = setInterval(function() {monkIsAnimating(4);}, 200);
+						}
+					});
+				} else
+					monkFalling();
+			}
 		}
 	}
 	/* FUNCTIONS CALLING */ 
@@ -432,7 +592,13 @@ $(function() {
 		areYouDead = 0;
 		speedGame = 100;
 		$('.score').html(0);
-		$('.monkContainer').css('display', 'block').css('top', 300).css('left', 400);
+		// Desktop
+		if (window.matchMedia("(min-width: 768px)").matches) {
+			$('.monkContainer').css('display', 'block').css('top', 300).css('left', 400);
+		// Mobile
+		} else {
+			$('.monkContainer').css('display', 'block').css('top', '50vh').css('left', '10vw');
+		}
 		$('.looser').css('opacity', '0').css('top', 700);
 		$('.oneMore').css('opacity', '0').css('top', 700);
 		$('.credits').css('opacity', '0').css('top', 700);

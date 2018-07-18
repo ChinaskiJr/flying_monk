@@ -4,11 +4,18 @@
 }
 @font-face {
 	font-family: Aileron-Regular;
-	src: url(../fonts/Aileron-Regular);
+	src: url(../fonts/Aileron-Regular.otf);
 }
 html, body {
 	overflow: hidden;
 	margin: 0;
+}
+.pleaseLandscape {
+	display: none;
+	text-align: center;
+	font-family: Aileron-Regular;
+	width: 100%;
+	height: 100%;
 }
 .gameContainer {
 	max-width: 960px;
@@ -32,7 +39,6 @@ html, body {
 	left: 950px;
 	overflow: hidden;
 	margin-left: -32px;
-	height: 100%;
 	width: 32px;
 }
 .soundButtonContainer:hover {
@@ -46,7 +52,6 @@ html, body {
 	left: 900px;
 	overflow: hidden;
 	margin-left: -32px;
-	height: 100%;
 	width: 32px;
 }
 .musicButtonContainer:hover {
@@ -56,11 +61,6 @@ html, body {
 .welcome {
 	z-index: 200;
 	position: absolute;
-}
-.startButton:hover {
-	top : 495px;
-	left: 345px;
-	cursor: pointer;
 }
 .startButton {
 	top: 500px;
@@ -165,5 +165,90 @@ html, body {
 	.pressSpace {
 		/* 960/2 - 466/2 */
 		left: 247px;
+	}
+}
+
+
+@media screen and (min-width: 1080px) {
+	.startButton:hover {
+		top : 495px;
+		left: 345px;
+		cursor: pointer;
+	}
+}
+@media screen and (max-width: 768px) and (orientation: portrait) {
+	html {
+		background: #8AC4F6;
+	}
+	.gameContainer {
+		display: none;
+	}
+	.pleaseLandscape {
+		display: block;
+	}
+}
+@media screen and (max-width: 768px) {
+	.gameContainer{
+		margin: none;
+		transform-origin: 0 0;
+		/*transform: scale(1, 0.5);*/
+		max-width: 100vw;
+		max-height: 100vh;
+	}
+	.welcome {
+		width: 100%;
+		height: 100%;
+	}
+	.welcomeBackground {
+		width: 100%;
+		height: 100%;
+	}
+	.startButton {
+		height: 15%;
+		width: 30%;
+		top: 50%;
+		left: 0;
+		right: 0;
+		margin-left: auto;
+		margin-right: auto;		
+	}
+	.background {
+		width: 100%;
+		height: 100vh;
+	}
+	.skyBackground {
+		height: 100%;
+		width: 100%;
+	}
+	.skyBackground:first-child {
+		left : 100%;
+	}
+	.credits {
+		font-size: 0.6em;
+		height: 50%;
+		overflow: scroll;
+	}
+	.looser {
+		width: 30%;
+	}
+	.oneMore {
+		width: 50%;
+	}
+	.musicButtonContainer {
+		left: 87.5%;
+	}
+	.soundButtonContainer {
+		left: 96%;
+	}
+	.pillars {
+		height: 60vh;
+	}
+	.monkContainer {
+		top: 50vh;
+		left: 10vw;
+		width: 10%;
+	}
+	.monkSprite {
+		height: 10%;
 	}
 }
