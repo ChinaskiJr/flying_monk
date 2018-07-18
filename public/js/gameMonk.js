@@ -73,20 +73,6 @@ $(function() {
 	hitLong.pause();
 	gameOverSound.play();
 	gameOverSound.pause();
-	
-	/* LOOP ANIMATION */
-	/* background animation */
-	function skyIsMoving () {
-		isSkyMoving = 1;
-		$('.skyBackground').animate({left : '-=' + screenWidth}, 4000, 'linear', function() {
-			$('.skyBackground:first').css('left', screenWidth);
-			$('.skyBackground:nth-child(2)').css('left', 0);
-			if (areYouDead != 1)
-				skyIsMoving();
-			else 
-				isSkyMoving = 0;
-		});
-	}
 	/* global variables */
 	// Desktop
 	var 	screenWidth = parseInt($('.background').css('width'));
@@ -100,6 +86,24 @@ $(function() {
 	}
 	var 	count = 0;
 	var 	monk = $('.monkSprite');
+	
+	/* LOOP ANIMATION */
+	/* background animation */
+	function skyIsMoving () {
+		isSkyMoving = 1;
+		$('.skyBackground').animate({left : '-=' + screenWidth}, {
+			duration: 4000,
+			easing: 'linear',
+			complete: function() {
+			$('.skyBackground:first').css('left', screenWidth);
+			$('.skyBackground:nth-child(2)').css('left', 0);
+			if (areYouDead != 1)
+				skyIsMoving();
+			else 
+				isSkyMoving = 0;
+			}
+		});
+	}
 	/* Monk animation */
 	// Reset interval1 at the end of the animation
 	function monkIsJumping() {
@@ -143,8 +147,6 @@ $(function() {
 	/* Pillars are coming : general function*/
 	function setNewPillar() {
 		var speedPillar = pillarsAreQuicker(timeStart);
-		// speed = distance / time
-		speedGame = screenWidth / speedPillar;		
 		var pillar = $('.pillars:first').clone().appendTo('.pillarsContainer');
 		/* Where does it comes ? 
 		 * 2 chances on 3 that it will be 
@@ -191,8 +193,7 @@ $(function() {
 		}
 		pillarIsComing(pillar, pillarY, speedPillar);
 		// Stock the ID in array interval4 for clear it when game will be over
-		interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 50));
-		
+		interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 30));
 	}		
 	/* Display a pillar and destroy it when 'top' comes to 0*/
 	function pillarIsComing(pillar, pillarY, speed) {
@@ -252,13 +253,9 @@ $(function() {
 		&& monkY + monkHeight > pillarY
 		&& monkX < pillarX
 		&& monkX + monkHeight > pillarX) {
-		console.log(speedMonk);
 			hitLong.play();
 			monkIsHurting();
 			$('.monkContainer').stop();
-			$('.monkContainer').animate({left: pillarX - 80}, {
-				duration: speedMonk,
-				queue:false});
 			$('.monkContainer').animate({left: 0},{
 				duration: speedMonk,
 				easing: 'linear',

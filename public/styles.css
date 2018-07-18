@@ -102,6 +102,7 @@ html, body {
 	width: 960px;
 	position: relative;
 	z-index: 10;
+	overflow: hidden;
 }
 .skyBackground:first-child {
 	left : 960px;
@@ -167,8 +168,6 @@ html, body {
 		left: 247px;
 	}
 }
-
-
 @media screen and (min-width: 1080px) {
 	.startButton:hover {
 		top : 495px;
@@ -197,11 +196,11 @@ html, body {
 	}
 	.welcome {
 		width: 100%;
-		height: 100%;
+		height: 100vh;
 	}
 	.welcomeBackground {
 		width: 100%;
-		height: 100%;
+		height: 100vh;
 	}
 	.startButton {
 		height: 15%;
@@ -219,6 +218,8 @@ html, body {
 	.skyBackground {
 		height: 100%;
 		width: 100%;
+		margin: 0;
+		padding: 0;
 	}
 	.skyBackground:first-child {
 		left : 100%;
