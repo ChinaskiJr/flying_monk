@@ -1,16 +1,5 @@
 $(function() {
 
-	$('.startButton').one('click', function() {
-	$('.welcome').css('display', 'none');
-
-	/* Let's store some data */
-	var lastPositionPillar;
-	var areYouBlocked = 0;
-	var areYouDead = 0;
-	var isSkyMoving = 0;
-	var speedGame = 100;
-	var spacePressed = 0;
-	var musicMute = 0;
 	/* SOUNDS */
 	/* Music loop */
 	var music = document.createElement('audio');
@@ -19,13 +8,12 @@ $(function() {
 		this.currentTime = 0;
 		this.play();
 	}, false);
-	music.play();
-	/* Hit sound */
+	// Game sounds
 	var hit = document.createElement('audio');
 	var hitLong = document.createElement('audio');
 	hit.setAttribute('src', 'sound/sounds/hit.mp3');
 	hitLong.setAttribute('src', 'sound/sounds/hitLong.mp3');
-	/* Game over sream */
+	/* Game over scream */
 	var gameOverSound = document.createElement('audio');
 	gameOverSound.setAttribute('src', 'sound/sounds/gameOver.mp3');
 	/* Sound on/off button */
@@ -65,6 +53,27 @@ $(function() {
 			musicMute = 0;
 		}
 	});
+
+	$('.startButton').one('click', function() {
+	$('.welcome').css('display', 'none');
+
+	/* Let's store some data */
+	var lastPositionPillar;
+	var areYouBlocked = 0;
+	var areYouDead = 0;
+	var isSkyMoving = 0;
+	var speedGame = 100;
+	var spacePressed = 0;
+	var musicMute = 0;
+
+	music.play();
+	hit.play();
+	hit.pause();
+	hitLong.play();
+	hitLong.pause();
+	gameOverSound.play();
+	gameOverSound.pause();
+	
 	/* LOOP ANIMATION */
 	/* background animation */
 	function skyIsMoving () {
@@ -182,11 +191,8 @@ $(function() {
 		}
 		pillarIsComing(pillar, pillarY, speedPillar);
 		// Stock the ID in array interval4 for clear it when game will be over
-		if (window.matchMedia("(min-width: 768px)").matches) {
-			interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 50));
-		} else {
-			interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 50));
-		}
+		interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 50));
+		
 	}		
 	/* Display a pillar and destroy it when 'top' comes to 0*/
 	function pillarIsComing(pillar, pillarY, speed) {
@@ -234,7 +240,7 @@ $(function() {
 		var monkX = parseInt($('.monkContainer').css('left'));
 		var pillarY = parseInt(pillar.css('top'));
 		var pillarX = parseInt(pillar.css('left'));
-		var speedMonk = speedPillar * ((pillarX - 60) / screenWidth);
+		var speedMonk = Math.abs(speedPillar * ((pillarX - 60) / screenWidth));
 		if (window.matchMedia("(min-width: 768px)").matches) {
 			var modif = 0;
 		} else {
@@ -246,11 +252,12 @@ $(function() {
 		&& monkY + monkHeight > pillarY
 		&& monkX < pillarX
 		&& monkX + monkHeight > pillarX) {
+		console.log(speedMonk);
 			hitLong.play();
 			monkIsHurting();
 			$('.monkContainer').stop();
 			$('.monkContainer').animate({left: pillarX - 80}, {
-				duration: 10,
+				duration: speedMonk,
 				queue:false});
 			$('.monkContainer').animate({left: 0},{
 				duration: speedMonk,
