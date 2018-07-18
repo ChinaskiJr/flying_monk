@@ -68,38 +68,24 @@ $(function() {
 	/* LOOP ANIMATION */
 	/* background animation */
 	function skyIsMoving () {
-		// Desktop
-		if (window.matchMedia("(min-width: 768px)").matches) {
-			isSkyMoving = 1;
-			$('.skyBackground').animate({left : '-=960'}, 4000, 'linear', function() {
-				$('.skyBackground:first').css('left', 960);
-				$('.skyBackground:nth-child(2)').css('left', 0);
-				if (areYouDead != 1)
-					skyIsMoving();
-				else 
-					isSkyMoving = 0;
-			});
-		// Mobile
-		} else {
-			$('.skyBackground').animate({left : '-=100%'}, 4000, 'linear', function() {
-				$('.skyBackground:first').css('left', '100%');
-				$('.skyBackground:nth-child(2)').css('left', 0);
-				if (areYouDead != 1)
-					skyIsMoving();
-				else 
-					isSkyMoving = 0;
-			});
-		}
-		
+		isSkyMoving = 1;
+		$('.skyBackground').animate({left : '-=' + screenWidth}, 4000, 'linear', function() {
+			$('.skyBackground:first').css('left', screenWidth);
+			$('.skyBackground:nth-child(2)').css('left', 0);
+			if (areYouDead != 1)
+				skyIsMoving();
+			else 
+				isSkyMoving = 0;
+		});
 	}
 	/* global variables */
 	// Desktop
+	var 	screenWidth = parseInt($('.background').css('width'));
+	var 	screenHeight = parseInt($('.background').css('height'));
 	if (window.matchMedia("(min-width: 768px)").matches) {
 		var 	monkHeight = 63.25;
 	// Mobile
 	} else {
-		var 	screenHeight = parseInt($('.background').css('height'));
-		var 	screenWidth = parseInt($('.background').css('width'));
 		var 	monkHeight = screenHeight * 0.1;
 		$('.monkContainer').css('width', monkHeight);
 	}
@@ -127,6 +113,7 @@ $(function() {
 	}
 	/* PressSpace flash */
 	function flash() {
+		// Only on desktop
 		if (window.matchMedia("(min-width: 768px)").matches) {
 		$('.pressSpace').animate({opacity: 0}, {
 			duration: 300,
@@ -148,7 +135,7 @@ $(function() {
 	function setNewPillar() {
 		var speedPillar = pillarsAreQuicker(timeStart);
 		// speed = distance / time
-		speedGame = 960 / speedPillar;		
+		speedGame = screenWidth / speedPillar;		
 		var pillar = $('.pillars:first').clone().appendTo('.pillarsContainer');
 		/* Where does it comes ? 
 		 * 2 chances on 3 that it will be 
@@ -173,27 +160,33 @@ $(function() {
 		// lastPositionPillar should be 0 or 370
 		lastPositionPillar = pillarY;
 		// Random height
-		if (pillarY === 0) {
-			pillarY -= Math.random() * 250;
-		} else {
-			pillarY += Math.random() * 250;
-		}
+		// for desktop
 		if (window.matchMedia("(min-width: 768px)").matches) {
+			if (pillarY === 0) {
+				pillarY -= Math.random() * 250;
+			} else {
+				pillarY += Math.random() * 250;
+			}
 			pillar.css('left', 870);
 			pillar.css('top', pillarY);
+		// for mobile
 		} else {
-			pillar.css('left', '100vw');
-			if (pillarY > 370) {
-				pillarY = 50 + (pillarY / 34);
-				pillarY = pillarY + "vh";
-				pillar.css('top', pillarY);
+			if (pillarY === 0) {
+				pillarY -= Math.random() * 34;
 			} else {
-				pillar.css('top', pillarY);
+				pillarY = 50 + Math.random() * 34;
 			}
+			pillar.css('left', '100vw');
+			pillarY = pillarY + "vh";
+			pillar.css('top', pillarY);	
 		}
 		pillarIsComing(pillar, pillarY, speedPillar);
 		// Stock the ID in array interval4 for clear it when game will be over
-		interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 60 - speedGame * 3));
+		if (window.matchMedia("(min-width: 768px)").matches) {
+			interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 50));
+		} else {
+			interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 50));
+		}
 	}		
 	/* Display a pillar and destroy it when 'top' comes to 0*/
 	function pillarIsComing(pillar, pillarY, speed) {
@@ -241,7 +234,12 @@ $(function() {
 		var monkX = parseInt($('.monkContainer').css('left'));
 		var pillarY = parseInt(pillar.css('top'));
 		var pillarX = parseInt(pillar.css('left'));
-		var speedMonk = speedPillar * ((pillarX - 60) / 960);
+		var speedMonk = speedPillar * ((pillarX - 60) / screenWidth);
+		if (window.matchMedia("(min-width: 768px)").matches) {
+			var modif = 0;
+		} else {
+			var modif = 15;
+		}
 		// Meet a pillar from the face
 		if (
 		monkY < (pillarY + pillar.height())
@@ -260,7 +258,7 @@ $(function() {
 				queue: false,
 			});	
 			$('.monkContainer').animate({top: monkY + 20},{ 
-				duration: 50,
+				duration: 50 + modif,
 				easing: 'linear',
 				queue: false,
 				complete: function() {
@@ -309,7 +307,13 @@ $(function() {
 		monkIsHurting();
 		hit.play();
 		$('.monkContainer').stop();
-		$('.monkContainer').animate({top: monkY - 50},{ 
+		// Modification for mobile devices
+		if (window.matchMedia("(min-width: 768px)").matches) {
+			modif = 0;
+		} else {
+			modif = 30;
+		}
+		$('.monkContainer').animate({top: monkY - 50 + modif},{ 
 			duration: 200,
 			easing: 'linear',
 			queue: false,
