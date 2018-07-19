@@ -128,20 +128,20 @@ $(function() {
 	function flash() {
 		// Only on desktop
 		if (window.matchMedia("(min-width: 768px)").matches) {
-		$('.pressSpace').animate({opacity: 0}, {
-			duration: 300,
-			complete: function() {
-				if (spacePressed === 0 && areYouDead === 0) {
-					$('.pressSpace').animate({opacity: 1}, {
-						duration: 300,
-						complete: flash,
-					});
-				} else {
-					$('.pressSpace').css('opacity', 0);
+			$('.pressSpace').animate({opacity: 0}, {
+				duration: 300,
+				complete: function() {
+					if (spacePressed === 0 && areYouDead === 0) {
+						$('.pressSpace').animate({opacity: 1}, {
+							duration: 300,
+							complete: flash,
+						});
+					} else {
+						$('.pressSpace').css('opacity', 0);
+					}
 				}
-			}
-		});
-	}
+			});
+		}
 	}
 	/* PILLARS STUFF */
 	/* Pillars are coming : general function*/
@@ -178,7 +178,7 @@ $(function() {
 			} else {
 				pillarY += Math.random() * 250;
 			}
-			pillar.css('left', 870);
+			pillar.css('left', 960);
 			pillar.css('top', pillarY);
 		// for mobile
 		} else {
@@ -191,12 +191,12 @@ $(function() {
 			pillarY = pillarY + "vh";
 			pillar.css('top', pillarY);	
 		}
-		pillarIsComing(pillar, pillarY, speedPillar);
 		// Stock the ID in array interval4 for clear it when game will be over
-		interval4[interval4.length] = (setInterval(function() {helloPillar(pillar, speedPillar);}, 30));
+		helloPillar(pillar, speedPillar);
+		pillarIsComing(pillar, pillarY, speedPillar);
 	}		
 	/* Display a pillar and destroy it when 'top' comes to 0*/
-	function pillarIsComing(pillar, pillarY, speed) {
+	function pillarIsComing(pillar, pillarY, speed, intervalPillar) {
 		pillar.animate({left : 0}, speed, 'linear', function() {
 			pillarX = parseInt($(this).css('left'));
 			while (pillarX < 0) {
@@ -206,7 +206,7 @@ $(function() {
 			pillar.remove();
 			var score = parseInt($('.score').html());
 			score+=5;
-			$('.score').html(score)
+			$('.score').html(score);
 		});
 	}
 	/* More you survive... more god is angry
@@ -241,12 +241,9 @@ $(function() {
 		var monkX = parseInt($('.monkContainer').css('left'));
 		var pillarY = parseInt(pillar.css('top'));
 		var pillarX = parseInt(pillar.css('left'));
-		var speedMonk = Math.abs(speedPillar * ((pillarX - 60) / screenWidth));
-		if (window.matchMedia("(min-width: 768px)").matches) {
-			var modif = 0;
-		} else {
-			var modif = 15;
-		}
+		var speedMonk = pillarX / (screenWidth / speedPillar);
+		speedMonk -= Math.abs(($('.monkContainer').width() / (screenWidth / speedPillar)));
+		speedMonk *= 0.7;
 		// Meet a pillar from the face
 		if (
 		monkY < (pillarY + pillar.height())
@@ -262,7 +259,7 @@ $(function() {
 				queue: false,
 			});	
 			$('.monkContainer').animate({top: monkY + 20},{ 
-				duration: 50 + modif,
+				duration: 35,
 				easing: 'linear',
 				queue: false,
 				complete: function() {
@@ -278,10 +275,15 @@ $(function() {
 		&& monkY > pillarY - monkHeight
 		&& monkX < pillarX + pillar.width()
 		&& monkX > pillarX) {
-		monkIsHurting();
-		hit.play();
-		$('.monkContainer').stop();
-			$('.monkContainer').animate({left: monkX + 40},{ 
+			monkIsHurting();
+			hit.play();
+			if (window.matchMedia("(min-width: 768px)").matches) {
+				modif = 0;
+			} else {
+				modif = 30;
+			}
+			$('.monkContainer').stop();
+			$('.monkContainer').animate({left: monkX + 40 - modif},{ 
 				duration: 50,
 				easing: 'linear',
 				queue: false,
@@ -297,10 +299,10 @@ $(function() {
 		&& monkX > pillarX
 		&& monkX < pillarX + pillar.width()
 		&& pillarX > 0) {
-		monkIsHurting();
-		hit.play();
-		$('.monkContainer').stop();
-			monkFalling();
+			monkIsHurting();
+			hit.play();
+			$('.monkContainer').stop();
+				monkFalling();
 		}
 		// Meet a pillard from monk's bottom
 		if (
@@ -308,24 +310,25 @@ $(function() {
 		&& monkY + monkHeight <= pillarY + 20
 		&& monkX + monkHeight > pillarX - 20
 		&& monkX < pillarX + pillar.width()) {
-		monkIsHurting();
-		hit.play();
-		$('.monkContainer').stop();
-		// Modification for mobile devices
-		if (window.matchMedia("(min-width: 768px)").matches) {
-			modif = 0;
-		} else {
-			modif = 30;
-		}
-		$('.monkContainer').animate({top: monkY - 50 + modif},{ 
-			duration: 200,
-			easing: 'linear',
-			queue: false,
-			complete: function() {
-				monkFalling();
+			monkIsHurting();
+			hit.play();
+			$('.monkContainer').stop();
+			// Modification for mobile devices
+			if (window.matchMedia("(min-width: 768px)").matches) {
+				modif = 0;
+			} else {
+				modif = 30;
 			}
-			});
+			$('.monkContainer').animate({top: monkY - 50 + modif},{ 
+				duration: 200,
+				easing: 'linear',
+				queue: false,
+				complete: function() {
+					monkFalling();
+				}
+				});
 		} 
+		interval4[interval4.length] = window.requestAnimationFrame(function() {helloPillar(pillar, speedPillar);});
 	}
 	/* MONK'S MOVEMENTS */
 	/* Monk is always falling... */
@@ -405,7 +408,7 @@ $(function() {
 				clearInterval(interval3);
 				// clear all the helloPillar() setInterval
 				for (var i = 0 ; i < interval4.length ; i++) {
-					clearInterval(interval4[i]);
+					window.cancelAnimationFrame(interval4[i]);
 				}
 				// Display the GameOver Screen
 				// fadeIn() doesn't work well on Edge & IE
@@ -463,7 +466,7 @@ $(function() {
 				clearInterval(interval3);
 				// clear all the helloPillar() setInterval
 				for (var i = 0 ; i < interval4.length ; i++) {
-					clearInterval(interval4[i]);
+					window.cancelAnimationFrame(interval4[i]);
 				}
 				// Display the GameOver Screen
 				// fadeIn() doesn't work well on Edge & IE
